@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://c8o6dr3fknptg"]
+
+[ext_resource type="Script" path="res://board_grid.gd" id="1_tpt1s"]
+
+[node name="BoardGrid" type="Node2D"]
+script = ExtResource("1_tpt1s")

@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=3 uid="uid://be72kyjs10j0x"]
+
+[ext_resource type="PackedScene" uid="uid://c8o6dr3fknptg" path="res://board_grid.tscn" id="1_pion6"]
+
+[node name="Game" type="Node2D"]
+
+[node name="BoardGrid" parent="." instance=ExtResource("1_pion6")]
+
+[node name="Overlay" type="CanvasLayer" parent="."]
+
+[node name="Menus" type="CanvasLayer" parent="."]

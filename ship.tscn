@@ -1,0 +1,30 @@
+[gd_scene load_steps=3 format=3 uid="uid://8a2wiw44kiin"]
+
+[ext_resource type="Script" path="res://ship.gd" id="1_u0ts2"]
+[ext_resource type="Texture2D" uid="uid://bjmvfwpuss68u" path="res://icon.svg" id="2_c2pdd"]
+
+[node name="Ship" type="Node2D"]
+script = ExtResource("1_u0ts2")
+
+[node name="1x1" type="Node2D" parent="."]
+
+[node name="Icon" type="Sprite2D" parent="1x1"]
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("2_c2pdd")
+
+[node name="1x4" type="Node2D" parent="."]
+visible = false
+
+[node name="Icon" type="Sprite2D" parent="1x4"]
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("2_c2pdd")
+
+[node name="Icon2" type="Sprite2D" parent="1x4"]
+position = Vector2(27, 0)
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("2_c2pdd")
+
+[node name="Icon3" type="Sprite2D" parent="1x4"]
+position = Vector2(55, 0)
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("2_c2pdd")
