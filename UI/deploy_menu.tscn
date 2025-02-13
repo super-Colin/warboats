@@ -42,6 +42,8 @@ layout_mode = 2
 
 [node name="Ship2" parent="HBoxContainer/VBoxContainer/ScrollContainer/VBoxContainer" instance=ExtResource("1_sfnm1")]
 layout_mode = 2
+shipId = 4
 
 [node name="Ship3" parent="HBoxContainer/VBoxContainer/ScrollContainer/VBoxContainer" instance=ExtResource("1_sfnm1")]
 layout_mode = 2
+shipId = 5

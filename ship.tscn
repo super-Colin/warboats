@@ -23,6 +23,7 @@ shipShape = Vector2(2, 3)
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
+mouse_filter = 2
 texture = ExtResource("4_3pak3")
 droppable = false
 
@@ -31,6 +32,7 @@ layout_mode = 0
 offset_left = 42.0
 offset_right = 82.0
 offset_bottom = 40.0
+mouse_filter = 2
 texture = ExtResource("5_ve2y3")
 droppable = false
 
@@ -39,6 +41,7 @@ layout_mode = 0
 offset_top = 44.0
 offset_right = 40.0
 offset_bottom = 84.0
+mouse_filter = 2
 texture = ExtResource("6_skj5g")
 droppable = false
 
@@ -48,6 +51,7 @@ offset_left = 43.0
 offset_top = 44.0
 offset_right = 83.0
 offset_bottom = 84.0
+mouse_filter = 2
 texture = ExtResource("7_c01vr")
 droppable = false
 
@@ -56,6 +60,7 @@ layout_mode = 0
 offset_top = 87.0
 offset_right = 40.0
 offset_bottom = 127.0
+mouse_filter = 2
 texture = ExtResource("8_3r0tt")
 droppable = false
 
@@ -65,5 +70,6 @@ offset_left = 43.0
 offset_top = 87.0
 offset_right = 83.0
 offset_bottom = 127.0
+mouse_filter = 2
 texture = ExtResource("9_dtlk6")
 droppable = false

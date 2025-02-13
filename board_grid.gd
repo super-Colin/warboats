@@ -22,6 +22,8 @@ func setShipIntoGrid(ship:Node, startingCoord:Vector2):
 		var xActual =  startingCoord.x + x
 		for y in ship.shipShape.y:
 			var yActual =  startingCoord.y + y
+			cellsRefs[xActual][yActual].isShip = true
+			cellsRefs[xActual][yActual].shipRef = ship # while placing ships, ship is still invisible on the side invisible
 			var shipTextureTile = ship.get_node("x"+str(x)+"y"+str(y)).texture
 			cellsRefs[xActual][yActual].texture = shipTextureTile
 

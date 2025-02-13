@@ -1,30 +1,36 @@
 #@tool
 extends TextureRect
 
+#@export var draggable = false
 @export var droppable = true
 
+var customSize:Vector2 = Vector2(40, 40)
+var shipRef:Node
 var isShip:bool = false
 var coords:Vector2
-var customSize:Vector2 = Vector2(40, 40)
 
 func _ready() -> void:
 	Globals.s_clearBoardHighlights.connect(disableHighlight)
+	Globals.s_removeShipFromBoard.connect(removeShipSprite)
+
+func removeShipSprite(shipId):
+	if isShip and shipRef.shipId == shipId:
+		$'.'.texture = null
 
 #@export var textureSetup:AtlasTexture:
 	#set(newVal):
 		#textureSetup = newVal
 		#$'.'.texture = newVal
 
-#func _get_drag_data(at_position: Vector2) -> Variant:
-	#var previewTexture = TextureRect.new()
-	#previewTexture.texture = $'.'.texture
-	#previewTexture.expand_mode = 1
-	#previewTexture.size = customSize
-	#var preview = Control.new()
-	#preview.add_child(previewTexture)
-	#set_drag_preview(preview)
-	#$'.'.texture = null
-	#return previewTexture.texture
+func _get_drag_data(at_position: Vector2) -> Variant:
+	if not isShip:
+		print("cell - NOT draggable")
+		return null
+	var preview = shipRef.duplicate()
+	preview.visible = true
+	set_drag_preview(preview)
+	$'.'.texture = null
+	return shipRef
 
 
 func _can_drop_data(at_position: Vector2, data: Variant) -> bool:
