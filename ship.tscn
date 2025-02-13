@@ -1,30 +1,69 @@
-[gd_scene load_steps=3 format=3 uid="uid://8a2wiw44kiin"]
+[gd_scene load_steps=9 format=3 uid="uid://8a2wiw44kiin"]
 
 [ext_resource type="Script" path="res://ship.gd" id="1_u0ts2"]
-[ext_resource type="Texture2D" uid="uid://bjmvfwpuss68u" path="res://icon.svg" id="2_c2pdd"]
+[ext_resource type="PackedScene" uid="uid://dcei64kwnh4vv" path="res://grid_cell.tscn" id="3_7aa8i"]
+[ext_resource type="Texture2D" uid="uid://dpfx0008rvwdq" path="res://ships/ship1/x0y0.tres" id="4_3pak3"]
+[ext_resource type="Texture2D" uid="uid://b2p0lj16mmeqx" path="res://ships/ship1/x1y0.tres" id="5_ve2y3"]
+[ext_resource type="Texture2D" uid="uid://chnqdpbix8uvb" path="res://ships/ship1/x0y1.tres" id="6_skj5g"]
+[ext_resource type="Texture2D" uid="uid://ciu1dciqtp4s5" path="res://ships/ship1/x1y1.tres" id="7_c01vr"]
+[ext_resource type="Texture2D" uid="uid://btgq84vow1dfw" path="res://ships/ship1/x0y2.tres" id="8_3r0tt"]
+[ext_resource type="Texture2D" uid="uid://coxai1jho10wt" path="res://ships/ship1/x1y2.tres" id="9_dtlk6"]
 
-[node name="Ship" type="Node2D"]
+[node name="Ship" type="Control"]
+modulate = Color(1, 0.831399, 0.824182, 1)
+custom_minimum_size = Vector2(80, 120)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 80.0
+offset_bottom = 120.0
 script = ExtResource("1_u0ts2")
+shipShape = Vector2(2, 3)
 
-[node name="1x1" type="Node2D" parent="."]
+[node name="x0y0" parent="." instance=ExtResource("3_7aa8i")]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("4_3pak3")
+droppable = false
 
-[node name="Icon" type="Sprite2D" parent="1x1"]
-scale = Vector2(0.2, 0.2)
-texture = ExtResource("2_c2pdd")
+[node name="x1y0" parent="." instance=ExtResource("3_7aa8i")]
+layout_mode = 0
+offset_left = 42.0
+offset_right = 82.0
+offset_bottom = 40.0
+texture = ExtResource("5_ve2y3")
+droppable = false
 
-[node name="1x4" type="Node2D" parent="."]
-visible = false
+[node name="x0y1" parent="." instance=ExtResource("3_7aa8i")]
+layout_mode = 0
+offset_top = 44.0
+offset_right = 40.0
+offset_bottom = 84.0
+texture = ExtResource("6_skj5g")
+droppable = false
 
-[node name="Icon" type="Sprite2D" parent="1x4"]
-scale = Vector2(0.2, 0.2)
-texture = ExtResource("2_c2pdd")
+[node name="x1y1" parent="." instance=ExtResource("3_7aa8i")]
+layout_mode = 0
+offset_left = 43.0
+offset_top = 44.0
+offset_right = 83.0
+offset_bottom = 84.0
+texture = ExtResource("7_c01vr")
+droppable = false
 
-[node name="Icon2" type="Sprite2D" parent="1x4"]
-position = Vector2(27, 0)
-scale = Vector2(0.2, 0.2)
-texture = ExtResource("2_c2pdd")
+[node name="x0y2" parent="." instance=ExtResource("3_7aa8i")]
+layout_mode = 0
+offset_top = 87.0
+offset_right = 40.0
+offset_bottom = 127.0
+texture = ExtResource("8_3r0tt")
+droppable = false
 
-[node name="Icon3" type="Sprite2D" parent="1x4"]
-position = Vector2(55, 0)
-scale = Vector2(0.2, 0.2)
-texture = ExtResource("2_c2pdd")
+[node name="x1y2" parent="." instance=ExtResource("3_7aa8i")]
+layout_mode = 0
+offset_left = 43.0
+offset_top = 87.0
+offset_right = 83.0
+offset_bottom = 127.0
+texture = ExtResource("9_dtlk6")
+droppable = false
