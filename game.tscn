@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://be72kyjs10j0x"]
+[gd_scene load_steps=5 format=3 uid="uid://be72kyjs10j0x"]
 
 [ext_resource type="Script" path="res://game.gd" id="1_hl5wc"]
 [ext_resource type="PackedScene" uid="uid://c8o6dr3fknptg" path="res://board_grid.tscn" id="1_pion6"]
 [ext_resource type="PackedScene" uid="uid://dbkjmy0ilupqk" path="res://UI/deploy_menu.tscn" id="3_a2hi3"]
+[ext_resource type="PackedScene" uid="uid://d03hcdnfcf6og" path="res://UI/battle_menu.tscn" id="3_l235k"]
 
 [node name="Game" type="Node2D"]
 script = ExtResource("1_hl5wc")
@@ -12,6 +13,9 @@ script = ExtResource("1_hl5wc")
 [node name="Menus" type="CanvasLayer" parent="."]
 
 [node name="DeployMenu" parent="Menus" instance=ExtResource("3_a2hi3")]
+
+[node name="BattleMenu" parent="Menus" instance=ExtResource("3_l235k")]
+visible = false
 
 [node name="freindly" parent="." instance=ExtResource("1_pion6")]
 position = Vector2(467, 209)

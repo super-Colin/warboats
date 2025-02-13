@@ -1,7 +1,7 @@
 extends Node2D
 
 @export var gridSize:Vector2 = Vector2(12, 12)
-@export var cellSize:Vector2 = Vector2(30, 30)
+@export var cellSize:Vector2 = Vector2(40, 40)
 @export var friendly:bool = true
 var cellsRefs = []
 var currentlyHighlightedCells = []
@@ -20,6 +20,7 @@ func _ready() -> void:
 		Globals.s_placeShotMarker.connect(_placeShotMarker)
 		Globals.enemyGrid = $'.'
 	makeCells()
+
 func highlightSpot(coords):
 	cellsRefs[coords.x][coords.y].enableHighlight()
 func disableHighlightSpot(coords):
@@ -39,6 +40,7 @@ func setShipIntoGrid(ship:Node, startingCoord:Vector2):
 			cellsRefs[xActual][yActual].shipRef = ship # while placing ships, ship is still invisible on the side invisible
 			var shipTextureTile = ship.get_node("x"+str(x)+"y"+str(y)).texture
 			cellsRefs[xActual][yActual].texture = shipTextureTile
+			cellsRefs[xActual][yActual].draggable = true
 
 func doesShapeFit(shape:Vector2, startingCoord:Vector2=Vector2.ZERO):
 	for x in shape.x:

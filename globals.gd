@@ -1,9 +1,10 @@
 extends Node
 
 signal s_placeShotMarker(coords:Vector2)
-signal s_confirmShotMarker
+signal s_confirmShotMarkers
 
 signal s_deployReady
+signal s_beginBattlePhase
 
 signal s_resetShots
 
@@ -19,14 +20,18 @@ var friendlyGrid:Node
 var enemyGrid:Node
 var hitMarkerGrid:Node
 
-enum BattlePhases {SETUP=0,}
-var currentBattlePhase:BattlePhases = BattlePhases.SETUP
+enum BattlePhases {MENU=0, DEPLOY=1, BATTLE=2}
+var currentBattlePhase:BattlePhases = BattlePhases.DEPLOY
 
 #var friendlyGridRef:Node
 
 
 
-#func _ready() -> void:
+func _ready() -> void:
 	#s_friendlySideReady.connect(func(): friendlySideReady = true)
 	#s_enemySideReady.connect(func(): enemySideReady = true)
 	#sideReady.connect(proceedTurn)
+	s_beginBattlePhase.connect(_beginBattlePhase)
+
+func _beginBattlePhase():
+	currentBattlePhase = BattlePhases.BATTLE

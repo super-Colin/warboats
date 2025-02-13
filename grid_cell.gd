@@ -9,16 +9,18 @@ var shipRef:Node
 var isShip:bool = false
 var coords:Vector2
 var hoveredOn = false
+var isMarkedForShot = false
 
 func _ready() -> void:
 	Globals.s_clearBoardHighlights.connect(disableHighlight)
 	Globals.s_removeShipFromBoard.connect(removeShipSprite)
-	Globals.s_deployReady.connect(func():lockIntoPlace())
-	#Globals.s_confirmShotMarker.connect()
+	Globals.s_deployReady.connect(lockIntoPlace)
+	Globals.s_confirmShotMarkers.connect(_confirmShotMarker)
 	$'.'.mouse_entered.connect(startHoverState)
 	$'.'.mouse_exited.connect(endHoverState)
 
 
+	
 
 func _input(event: InputEvent) -> void:
 	if Input.is_action_just_pressed("MarkShot") and hoveredOn:
@@ -27,6 +29,7 @@ func _input(event: InputEvent) -> void:
 
 func lockIntoPlace():
 	draggable = false
+	#pass
 
 func removeShipSprite(shipId):
 	if isShip and shipRef.shipId == shipId:
@@ -67,7 +70,7 @@ func _can_drop_data(at_position: Vector2, data: Variant) -> bool:
 func _drop_data(at_position: Vector2, data: Variant) -> void:
 	print("cell - setting on drop: ", data)
 	$'.'.get_parent().setShipIntoGrid(data, coords)
-	draggable = true
+	#draggable = true
 
 
 func setSize(newSize:Vector2):
@@ -103,9 +106,19 @@ func disableHighlight():
 func clearMarker():
 	$Peg.visible = false
 
+
+func _confirmShotMarker():
+	if isMarkedForShot:
+		if isShip:
+			makeHitMarker()
+		else:
+			makeHMissMarker()
+		isMarkedForShot = false
+
 func makeUncomfirmedMarker():
 	$Peg.color = Color.PURPLE
 	$Peg.visible = true
+	isMarkedForShot = true
 
 func makeHitMarker():
 	$Peg.color = Color.RED
