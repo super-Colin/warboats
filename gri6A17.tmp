@@ -1,0 +1,46 @@
+[gd_scene load_steps=3 format=3 uid="uid://dcei64kwnh4vv"]
+
+[ext_resource type="Script" path="res://grid_cell.gd" id="1_25my8"]
+[ext_resource type="Texture2D" uid="uid://cxb30gnteao3j" path="res://ship1.tres" id="1_obt2q"]
+
+[node name="GridCell" type="TextureRect"]
+custom_minimum_size = Vector2(40, 40)
+texture = ExtResource("1_obt2q")
+expand_mode = 1
+script = ExtResource("1_25my8")
+
+[node name="Highlight" type="ColorRect" parent="."]
+visible = false
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -10.0
+offset_top = -10.0
+offset_right = 10.0
+offset_bottom = 10.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.848972, 0.230278, 0.49581, 0.572549)
+
+[node name="Peg" type="ColorRect" parent="."]
+visible = false
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="Panel" parent="."]
+show_behind_parent = true
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+mouse_filter = 1

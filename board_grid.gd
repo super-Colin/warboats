@@ -3,6 +3,7 @@ extends Node2D
 @export var gridSize = Vector2(12, 12)
 @export var cellSize = Vector2(30, 30)
 var cellsRefs = []
+var currentlyHighlightedCells = []
 
 var cell_scene = preload("res://grid_cell.tscn")
 
@@ -10,9 +11,19 @@ var cell_scene = preload("res://grid_cell.tscn")
 
 
 func _ready() -> void:
-	for c in $'.'.get_children():
+	for c in $'.'.get_children(): # current cells are only there to be visibile in the editor
 		c.queue_free()
 	makeCells()
+
+
+func setShipIntoGrid(ship:Node, startingCoord:Vector2):
+	print("grid - setting ship")
+	for x in ship.shipShape.x:
+		var xActual =  startingCoord.x + x
+		for y in ship.shipShape.y:
+			var yActual =  startingCoord.y + y
+			var shipTextureTile = ship.get_node("x"+str(x)+"y"+str(y)).texture
+			cellsRefs[xActual][yActual].texture = shipTextureTile
 
 func doesShapeFit(shape:Vector2, startingCoord:Vector2=Vector2.ZERO):
 	for x in shape.x:
@@ -25,15 +36,21 @@ func doesShapeFit(shape:Vector2, startingCoord:Vector2=Vector2.ZERO):
 				return false
 
 func hightlightShape(shape:Vector2, startingCoord:Vector2=Vector2.ZERO):
+	for c in currentlyHighlightedCells:
+		c.disableHighlight()
 	for x in shape.x:
-		if not cellsRefs.size() > x:
+		var xActual =  startingCoord.x + x
+		if not cellsRefs.size() > xActual:
 			print("ran out of space on the x axis")
 			return false
 		for y in shape.y:
-			if not cellsRefs[x].size() > y:
+			var yActual =  startingCoord.y + y
+			if not cellsRefs[xActual].size() > yActual:
 				print("ran out of space on the y axis")
 				return false
-			cellsRefs[x][y].enableHighlight()
+			cellsRefs[xActual][yActual].enableHighlight()
+			currentlyHighlightedCells.append(cellsRefs[xActual][yActual])
+	return true
 
 
 func makeCells():

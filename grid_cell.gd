@@ -7,6 +7,9 @@ var isShip:bool = false
 var coords:Vector2
 var customSize:Vector2 = Vector2(40, 40)
 
+func _ready() -> void:
+	Globals.s_clearBoardHighlights.connect(disableHighlight)
+
 #@export var textureSetup:AtlasTexture:
 	#set(newVal):
 		#textureSetup = newVal
@@ -28,15 +31,18 @@ func _can_drop_data(at_position: Vector2, data: Variant) -> bool:
 	if not droppable:
 		return false
 	#print("cell - can drop data? : ", data, ", at coords: ", coords)
-	if typeof(data) == TYPE_DICTIONARY and data.has("shipShape"):
-		print("cell - droppable has shipShape")
-		$'.'.get_parent().hightlightShape(data.shipShape)
-		return true
+	#if typeof(data) == TYPE_DICTIONARY and data.has("shipShape"):
+	if data is Node and "shipShape" in data:
+		#print("cell - droppable has shipShape")
+		return $'.'.get_parent().hightlightShape(data.shipShape, coords)
+		#return $'.'.get_parent().doesShapeFit()
+		#return true
 	else:
 		return false
 
 func _drop_data(at_position: Vector2, data: Variant) -> void:
 	print("cell - setting on drop: ", data)
+	$'.'.get_parent().setShipIntoGrid(data, coords)
 	#$'.'.texture = data
 
 

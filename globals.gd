@@ -1,5 +1,8 @@
 extends Node
 
+
+signal s_clearBoardHighlights
+
 signal s_sideReady(isFriendly:bool) # friendly side or enemy side
 var friendlySideReady= false
 var enemySideReady= false

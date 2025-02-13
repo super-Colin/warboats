@@ -1,6 +1,7 @@
 extends Control
 
 @export var shipShape:Vector2 = Vector2(1, 3)
+@export var shipId:int = 3
 var textures
 
 var dragging = false
@@ -14,7 +15,8 @@ func getDropInfo():
 func _get_drag_data(at_position: Vector2) -> Variant:
 	set_drag_preview($'.'.duplicate())
 	dragging = true
-	return getDropInfo()
+	#return getDropInfo()
+	return $'.'
 
 
 #func _can_drop_data(at_position: Vector2, data: Variant) -> bool:
@@ -36,8 +38,10 @@ func _notification(what: int) -> void:
 			dragging = false
 			if is_drag_successful():
 				print("ship - drag was successful")
-			#else:
-				#print("ship - drag was NOT successful")
+				$'.'.visible = false
+			else:
+				Globals.s_clearBoardHighlights.emit()
+				print("ship - drag was NOT successful")
 
 
 ## Called when the node enters the scene tree for the first time.
