@@ -20,16 +20,6 @@ func _get_drag_data(at_position: Vector2) -> Variant:
 	return $'.'
 
 
-#func _can_drop_data(at_position: Vector2, data: Variant) -> bool:
-	#print("cell - can drop data? : ", data)
-	#if data is Texture2D:
-		#return true
-	#return false
-
-#func _drop_data(at_position: Vector2, data: Variant) -> void:
-	#$'.'.texture = data
-
-
 
 func _notification(what: int) -> void:
 	#if what is Node.NOTIFICATION_DRAG_END:
@@ -40,9 +30,11 @@ func _notification(what: int) -> void:
 			if is_drag_successful():
 				print("ship - drag was successful")
 				$'.'.visible = false
+				#Globals.s_removeShipFromBoard.emit(shipId)
+				
 			else:
-				Globals.s_clearBoardHighlights.emit()
 				print("ship - drag was NOT successful")
+				Globals.s_clearBoardHighlights.emit()
 
 
 ## Called when the node enters the scene tree for the first time.

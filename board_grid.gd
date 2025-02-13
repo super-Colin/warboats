@@ -18,6 +18,8 @@ func _ready() -> void:
 
 func setShipIntoGrid(ship:Node, startingCoord:Vector2):
 	print("grid - setting ship")
+	Globals.s_removeShipFromBoard.emit(ship.shipId)
+	Globals.s_clearBoardHighlights.emit()
 	for x in ship.shipShape.x:
 		var xActual =  startingCoord.x + x
 		for y in ship.shipShape.y:

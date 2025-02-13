@@ -1,11 +1,9 @@
-[gd_scene load_steps=3 format=3 uid="uid://dcei64kwnh4vv"]
+[gd_scene load_steps=2 format=3 uid="uid://dcei64kwnh4vv"]
 
 [ext_resource type="Script" path="res://grid_cell.gd" id="1_25my8"]
-[ext_resource type="Texture2D" uid="uid://cxb30gnteao3j" path="res://ship1.tres" id="1_obt2q"]
 
 [node name="GridCell" type="TextureRect"]
 custom_minimum_size = Vector2(40, 40)
-texture = ExtResource("1_obt2q")
 expand_mode = 1
 script = ExtResource("1_25my8")
 

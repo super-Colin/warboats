@@ -15,6 +15,7 @@ func _ready() -> void:
 
 func removeShipSprite(shipId):
 	if isShip and shipRef.shipId == shipId:
+		print("cell - clearing out ship sprite, at coords: ", coords)
 		$'.'.texture = null
 
 #@export var textureSetup:AtlasTexture:
@@ -28,8 +29,10 @@ func _get_drag_data(at_position: Vector2) -> Variant:
 		return null
 	var preview = shipRef.duplicate()
 	preview.visible = true
+	preview.modulate.a = 0.6
 	set_drag_preview(preview)
-	$'.'.texture = null
+	#$'.'.texture = null
+	#Globals.s_removeShipFromBoard.emit(shipRef.shipId)
 	return shipRef
 
 
