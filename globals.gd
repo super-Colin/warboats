@@ -1,5 +1,11 @@
 extends Node
 
+signal s_placeShotMarker(coords:Vector2)
+signal s_confirmShotMarker
+
+signal s_deployReady
+
+signal s_resetShots
 
 signal s_clearBoardHighlights
 
@@ -16,6 +22,7 @@ var hitMarkerGrid:Node
 enum BattlePhases {SETUP=0,}
 var currentBattlePhase:BattlePhases = BattlePhases.SETUP
 
+#var friendlyGridRef:Node
 
 
 

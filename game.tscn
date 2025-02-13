@@ -13,5 +13,9 @@ script = ExtResource("1_hl5wc")
 
 [node name="DeployMenu" parent="Menus" instance=ExtResource("3_a2hi3")]
 
-[node name="BoardGrid" parent="." instance=ExtResource("1_pion6")]
+[node name="freindly" parent="." instance=ExtResource("1_pion6")]
 position = Vector2(467, 209)
+
+[node name="enemy" parent="." instance=ExtResource("1_pion6")]
+position = Vector2(989, 210)
+friendly = false

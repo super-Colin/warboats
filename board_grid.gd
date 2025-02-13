@@ -1,20 +1,31 @@
 extends Node2D
 
-@export var gridSize = Vector2(12, 12)
-@export var cellSize = Vector2(30, 30)
+@export var gridSize:Vector2 = Vector2(12, 12)
+@export var cellSize:Vector2 = Vector2(30, 30)
+@export var friendly:bool = true
 var cellsRefs = []
 var currentlyHighlightedCells = []
 
 var cell_scene = preload("res://grid_cell.tscn")
 
-
-
+func calcTotalShots():
+	return 5
 
 func _ready() -> void:
 	for c in $'.'.get_children(): # current cells are only there to be visibile in the editor
 		c.queue_free()
+	if friendly:
+		Globals.friendlyGrid = $'.'
+	else:
+		Globals.s_placeShotMarker.connect(_placeShotMarker)
+		Globals.enemyGrid = $'.'
 	makeCells()
-
+func highlightSpot(coords):
+	cellsRefs[coords.x][coords.y].enableHighlight()
+func disableHighlightSpot(coords):
+	cellsRefs[coords.x][coords.y].disableHighlight()
+func _placeShotMarker(coords):
+	cellsRefs[coords.x][coords.y].makeUncomfirmedMarker()
 
 func setShipIntoGrid(ship:Node, startingCoord:Vector2):
 	print("grid - setting ship")
