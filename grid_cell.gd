@@ -21,7 +21,7 @@ func _ready() -> void:
 	$'.'.mouse_entered.connect(startHoverState)
 	$'.'.mouse_exited.connect(endHoverState)
 
-# Set size 
+# Set size, called by parent grid
 func setSize(newSize:Vector2):
 	customSize = newSize
 	$'.'.custom_minimum_size = newSize
@@ -38,6 +38,10 @@ func _input(event: InputEvent) -> void:
 func lockIntoPlace():
 	draggable = false
 
+func isEmpty():
+	if not confirmed and not isShip:
+		return true
+
 func removeShipSprite(shipId):
 	if isShip and shipRef.shipId == shipId:
 		#print("cell - clearing out ship sprite, at coords: ", coords)
@@ -46,7 +50,7 @@ func removeShipSprite(shipId):
 # Drag and Drop
 func _get_drag_data(at_position: Vector2) -> Variant:
 	if not draggable:
-		print("cell - NOT draggable")
+		#print("cell - NOT draggable")
 		return null
 	var preview = shipRef.duplicate()
 	preview.visible = true
@@ -55,7 +59,7 @@ func _get_drag_data(at_position: Vector2) -> Variant:
 	return shipRef
 
 func _can_drop_data(at_position: Vector2, data: Variant) -> bool:
-	if not droppable:
+	if not droppable or not $'.'.get_parent().friendly:
 		return false
 	if data is Node and "shipShape" in data:
 		return $'.'.get_parent().hightlightShape(data.shipShape, coords)
@@ -81,6 +85,14 @@ func _confirmShotMarker():
 			makeHMissMarker()
 		isMarkedForShot = false
 		confirmed = true
+
+
+
+
+
+
+
+
 
 # Hover state
 func startHoverState():

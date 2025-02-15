@@ -18,6 +18,7 @@ offset_right = 80.0
 offset_bottom = 120.0
 script = ExtResource("1_u0ts2")
 shipShape = Vector2(2, 3)
+targetPoints = 5
 
 [node name="x0y0" parent="." instance=ExtResource("3_7aa8i")]
 layout_mode = 0
@@ -25,15 +26,6 @@ offset_right = 40.0
 offset_bottom = 40.0
 mouse_filter = 2
 texture = ExtResource("4_3pak3")
-droppable = false
-
-[node name="x1y0" parent="." instance=ExtResource("3_7aa8i")]
-layout_mode = 0
-offset_left = 42.0
-offset_right = 82.0
-offset_bottom = 40.0
-mouse_filter = 2
-texture = ExtResource("5_ve2y3")
 droppable = false
 
 [node name="x0y1" parent="." instance=ExtResource("3_7aa8i")]
@@ -45,6 +37,24 @@ mouse_filter = 2
 texture = ExtResource("6_skj5g")
 droppable = false
 
+[node name="x0y2" parent="." instance=ExtResource("3_7aa8i")]
+layout_mode = 0
+offset_top = 87.0
+offset_right = 40.0
+offset_bottom = 127.0
+mouse_filter = 2
+texture = ExtResource("8_3r0tt")
+droppable = false
+
+[node name="x1y0" parent="." instance=ExtResource("3_7aa8i")]
+layout_mode = 0
+offset_left = 42.0
+offset_right = 82.0
+offset_bottom = 40.0
+mouse_filter = 2
+texture = ExtResource("5_ve2y3")
+droppable = false
+
 [node name="x1y1" parent="." instance=ExtResource("3_7aa8i")]
 layout_mode = 0
 offset_left = 43.0
@@ -53,15 +63,6 @@ offset_right = 83.0
 offset_bottom = 84.0
 mouse_filter = 2
 texture = ExtResource("7_c01vr")
-droppable = false
-
-[node name="x0y2" parent="." instance=ExtResource("3_7aa8i")]
-layout_mode = 0
-offset_top = 87.0
-offset_right = 40.0
-offset_bottom = 127.0
-mouse_filter = 2
-texture = ExtResource("8_3r0tt")
 droppable = false
 
 [node name="x1y2" parent="." instance=ExtResource("3_7aa8i")]

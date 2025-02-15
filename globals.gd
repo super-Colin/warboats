@@ -37,6 +37,8 @@ signal s_battlePhaseChanged
 func calcRemainingShots():
 	return friendlyGrid.calcTotalShots() - enemyGrid.calcTotalMarkers()
 
+signal s_deployBoardChanged
+
 
 func _ready() -> void:
 	#s_friendlySideReady.connect(func(): friendlySideReady = true)
@@ -50,7 +52,8 @@ func _beginBattlePhase():
 
 
 
-
+var roundMinTargetPoints = 30
+var roundDeployPoints = 20
 
 
 

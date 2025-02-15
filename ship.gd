@@ -2,9 +2,12 @@ extends Control
 
 @export var shipShape:Vector2 = Vector2(1, 3)
 @export var shipId:int = 3
+@export var targetPoints = 3
+@export var deployCost = 3
+@export var shotsAvailable = 1
+
 var textures
 var placedAt:Vector2 
-
 var dragging = false
 
 
