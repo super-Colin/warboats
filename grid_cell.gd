@@ -10,17 +10,31 @@ var isShip:bool = false
 var coords:Vector2
 var hoveredOn = false
 var isMarkedForShot = false
+var confirmed = false
 
 func _ready() -> void:
 	Globals.s_clearBoardHighlights.connect(disableHighlight)
 	Globals.s_removeShipFromBoard.connect(removeShipSprite)
 	Globals.s_deployReady.connect(lockIntoPlace)
 	Globals.s_confirmShotMarkers.connect(_confirmShotMarker)
+	Globals.s_resetShotMarkers.connect(_resetShotMarkers)
 	$'.'.mouse_entered.connect(startHoverState)
 	$'.'.mouse_exited.connect(endHoverState)
 
+func _resetShotMarkers():
+	if isMarkedForShot:
+		hidePeg()
+		isMarkedForShot = false
 
-	
+func _confirmShotMarker():
+	if isMarkedForShot:
+		if isShip:
+			makeHitMarker()
+		else:
+			makeHMissMarker()
+		isMarkedForShot = false
+		confirmed = true
+
 
 func _input(event: InputEvent) -> void:
 	if Input.is_action_just_pressed("MarkShot") and hoveredOn:
@@ -107,13 +121,8 @@ func clearMarker():
 	$Peg.visible = false
 
 
-func _confirmShotMarker():
-	if isMarkedForShot:
-		if isShip:
-			makeHitMarker()
-		else:
-			makeHMissMarker()
-		isMarkedForShot = false
+func hidePeg():
+	$Peg.visible = false
 
 func makeUncomfirmedMarker():
 	$Peg.color = Color.PURPLE

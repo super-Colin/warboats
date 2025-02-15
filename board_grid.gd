@@ -5,11 +5,23 @@ extends Node2D
 @export var friendly:bool = true
 var cellsRefs = []
 var currentlyHighlightedCells = []
+var unconfirmedShots = 0
+#var unconfirmedShotMarkers = []
 
 var cell_scene = preload("res://grid_cell.tscn")
 
+func addToUnconfirmedShots(cell:Node):
+	#unconfirmedShotMarkers.append(cell)
+	unconfirmedShots += 1
+
 func calcTotalShots():
 	return 5
+
+func calcTotalMarkers():
+	return unconfirmedShots
+
+func calcRemainingShots():
+	return calcTotalShots() - unconfirmedShots
 
 func _ready() -> void:
 	for c in $'.'.get_children(): # current cells are only there to be visibile in the editor
@@ -19,14 +31,24 @@ func _ready() -> void:
 	else:
 		Globals.s_placeShotMarker.connect(_placeShotMarker)
 		Globals.enemyGrid = $'.'
+	Globals.s_resetShotMarkers.connect(_resetShotMarkers)
 	makeCells()
 
 func highlightSpot(coords):
 	cellsRefs[coords.x][coords.y].enableHighlight()
 func disableHighlightSpot(coords):
 	cellsRefs[coords.x][coords.y].disableHighlight()
+
+func _resetShotMarkers():
+	unconfirmedShots = 0
 func _placeShotMarker(coords):
-	cellsRefs[coords.x][coords.y].makeUncomfirmedMarker()
+	if calcRemainingShots() > 0 and not cellsRefs[coords.x][coords.y].isMarkedForShot:
+		cellsRefs[coords.x][coords.y].makeUncomfirmedMarker()
+		unconfirmedShots += 1
+		Globals.s_placedShotMarker.emit()
+		print("grid - shots left: ", calcRemainingShots(), ", unconfirmed shots: ", unconfirmedShots)
+	else:
+		print("grid - no shots left")
 
 func setShipIntoGrid(ship:Node, startingCoord:Vector2):
 	print("grid - setting ship")

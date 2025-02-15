@@ -3,16 +3,23 @@ extends Control
 var activeShots = []
 
 func _ready() -> void:
-	%ResetShots.pressed.connect(func():Globals.s_resetShots.emit())
+	%ResetShots.pressed.connect(func():Globals.s_resetShotMarkers.emit())
 	%ConfirmShots.pressed.connect(func():Globals.s_confirmShotMarkers.emit())
-	#Globals.s_deployReady.connect(updateShotsLeft)
 	Globals.s_beginBattlePhase.connect(_beginBattlePhase)
+	Globals.s_placedShotMarker.connect(updateShotsLeft)
+	Globals.s_resetShotMarkers.connect(resetShotsLeft)
+
+
+
 
 func _beginBattlePhase():
 	$'.'.visible = true
-	updateShotsLeft()
+	resetShotsLeft()
 
 
 func updateShotsLeft():
-	var shotsLeft = Globals.friendlyGrid.calcTotalShots() - activeShots.size()
-	%ShotsLeft.text = "Shots left: " + str(shotsLeft)
+	print("battle menu - updating shots: ", Globals.friendlyGrid.calcRemainingShots())
+	%ShotsLeft.text = "Shots left: " + str(Globals.calcRemainingShots())
+
+func resetShotsLeft():
+	%ShotsLeft.text = "Shots left: " + str(Globals.friendlyGrid.calcTotalShots())
