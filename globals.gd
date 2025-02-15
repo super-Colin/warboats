@@ -5,6 +5,9 @@ signal s_placedShotMarker
 signal s_confirmShotMarkers
 signal s_resetShotMarkers
 
+signal coordHoveredOn(coord:Vector2)
+signal coordHoveredOff(coord:Vector2)
+
 signal s_deployReady
 signal s_beginBattlePhase
 
@@ -23,7 +26,11 @@ var enemyGrid:Node
 var hitMarkerGrid:Node
 
 enum BattlePhases {MENU=0, DEPLOY=1, BATTLE=2}
-var currentBattlePhase:BattlePhases = BattlePhases.DEPLOY
+var currentBattlePhase:BattlePhases = BattlePhases.MENU:
+	set(newVal):
+		currentBattlePhase = newVal
+		s_battlePhaseChanged.emit()
+signal s_battlePhaseChanged
 
 #var friendlyGridRef:Node
 

@@ -6,12 +6,10 @@ extends Node2D
 var cellsRefs = []
 var currentlyHighlightedCells = []
 var unconfirmedShots = 0
-#var unconfirmedShotMarkers = []
 
 var cell_scene = preload("res://grid_cell.tscn")
 
-func addToUnconfirmedShots(cell:Node):
-	#unconfirmedShotMarkers.append(cell)
+func addToUnconfirmedShots():
 	unconfirmedShots += 1
 
 func calcTotalShots():
@@ -32,7 +30,18 @@ func _ready() -> void:
 		Globals.s_placeShotMarker.connect(_placeShotMarker)
 		Globals.enemyGrid = $'.'
 	Globals.s_resetShotMarkers.connect(_resetShotMarkers)
+	Globals.coordHoveredOn.connect(cellHoveredOn)
+	Globals.coordHoveredOff.connect(cellHoveredOff)
 	makeCells()
+
+func cellHoveredOn(coords:Vector2):
+	if Globals.currentBattlePhase != Globals.BattlePhases.BATTLE:
+		return
+	if not friendly:
+		highlightSpot(coords)
+func cellHoveredOff(coords:Vector2):
+	disableHighlightSpot(coords)
+
 
 func highlightSpot(coords):
 	cellsRefs[coords.x][coords.y].enableHighlight()
@@ -43,9 +52,9 @@ func _resetShotMarkers():
 	unconfirmedShots = 0
 func _placeShotMarker(coords):
 	if calcRemainingShots() > 0 and not cellsRefs[coords.x][coords.y].isMarkedForShot:
-		cellsRefs[coords.x][coords.y].makeUncomfirmedMarker()
-		unconfirmedShots += 1
-		Globals.s_placedShotMarker.emit()
+		if cellsRefs[coords.x][coords.y].makeUncomfirmedMarker():
+			unconfirmedShots += 1
+			Globals.s_placedShotMarker.emit()
 		print("grid - shots left: ", calcRemainingShots(), ", unconfirmed shots: ", unconfirmedShots)
 	else:
 		print("grid - no shots left")

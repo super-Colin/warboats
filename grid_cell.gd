@@ -21,6 +21,53 @@ func _ready() -> void:
 	$'.'.mouse_entered.connect(startHoverState)
 	$'.'.mouse_exited.connect(endHoverState)
 
+# Set size 
+func setSize(newSize:Vector2):
+	customSize = newSize
+	$'.'.custom_minimum_size = newSize
+	$Highlight.custom_minimum_size = newSize
+
+
+
+
+func _input(event: InputEvent) -> void:
+	if Input.is_action_just_pressed("MarkShot") and hoveredOn:
+		#print("cell - clicked on: ", coords)
+		Globals.s_placeShotMarker.emit(coords)
+
+func lockIntoPlace():
+	draggable = false
+
+func removeShipSprite(shipId):
+	if isShip and shipRef.shipId == shipId:
+		#print("cell - clearing out ship sprite, at coords: ", coords)
+		$'.'.texture = null
+
+# Drag and Drop
+func _get_drag_data(at_position: Vector2) -> Variant:
+	if not draggable:
+		print("cell - NOT draggable")
+		return null
+	var preview = shipRef.duplicate()
+	preview.visible = true
+	preview.modulate.a = 0.6
+	set_drag_preview(preview)
+	return shipRef
+
+func _can_drop_data(at_position: Vector2, data: Variant) -> bool:
+	if not droppable:
+		return false
+	if data is Node and "shipShape" in data:
+		return $'.'.get_parent().hightlightShape(data.shipShape, coords)
+	else:
+		return false
+
+func _drop_data(at_position: Vector2, data: Variant) -> void:
+	#print("cell - setting on drop: ", data)
+	$'.'.get_parent().setShipIntoGrid(data, coords)
+
+
+# Decide what type of marker should be used
 func _resetShotMarkers():
 	if isMarkedForShot:
 		hidePeg()
@@ -35,104 +82,34 @@ func _confirmShotMarker():
 		isMarkedForShot = false
 		confirmed = true
 
-
-func _input(event: InputEvent) -> void:
-	if Input.is_action_just_pressed("MarkShot") and hoveredOn:
-		print("cell - clicked on: ", coords)
-		Globals.s_placeShotMarker.emit(coords)
-
-func lockIntoPlace():
-	draggable = false
-	#pass
-
-func removeShipSprite(shipId):
-	if isShip and shipRef.shipId == shipId:
-		print("cell - clearing out ship sprite, at coords: ", coords)
-		$'.'.texture = null
-
-#@export var textureSetup:AtlasTexture:
-	#set(newVal):
-		#textureSetup = newVal
-		#$'.'.texture = newVal
-
-func _get_drag_data(at_position: Vector2) -> Variant:
-	if not draggable:
-		print("cell - NOT draggable")
-		return null
-	var preview = shipRef.duplicate()
-	preview.visible = true
-	preview.modulate.a = 0.6
-	set_drag_preview(preview)
-	#$'.'.texture = null
-	#Globals.s_removeShipFromBoard.emit(shipRef.shipId)
-	return shipRef
-
-
-func _can_drop_data(at_position: Vector2, data: Variant) -> bool:
-	if not droppable:
-		return false
-	#print("cell - can drop data? : ", data, ", at coords: ", coords)
-	#if typeof(data) == TYPE_DICTIONARY and data.has("shipShape"):
-	if data is Node and "shipShape" in data:
-		#print("cell - droppable has shipShape")
-		return $'.'.get_parent().hightlightShape(data.shipShape, coords)
-		#return $'.'.get_parent().doesShapeFit()
-		#return true
-	else:
-		return false
-
-func _drop_data(at_position: Vector2, data: Variant) -> void:
-	print("cell - setting on drop: ", data)
-	$'.'.get_parent().setShipIntoGrid(data, coords)
-	#draggable = true
-
-
-func setSize(newSize:Vector2):
-	#$Box.shape.size = newSize
-	customSize = newSize
-	$Highlight.custom_minimum_size = newSize
-
-
-#func _ready() -> void:
-	#$Peg.visible = false
-	#$'.'.mouse_entered.connect(enableHighlight)
-	#$'.'.mouse_exited.connect(disableHighlight)
-
-
+# Hover state
 func startHoverState():
 	hoveredOn = true
-	if not get_parent().friendly:
-		enableHighlight()
-	else:
-		Globals.enemyGrid.highlightSpot(coords)
+	Globals.coordHoveredOn.emit(coords)
 func endHoverState():
 	hoveredOn = false
-	disableHighlight()
-	Globals.enemyGrid.disableHighlightSpot(coords)
+	Globals.coordHoveredOff.emit(coords)
 
+# Highlight visibility
 func enableHighlight():
 	$Highlight.visible = true
-	#print("cell - highlighting at: ", coords)
-
 func disableHighlight():
 	$Highlight.visible = false
-
 func clearMarker():
 	$Peg.visible = false
 
-
+# Peg color / visibility
 func hidePeg():
 	$Peg.visible = false
-
 func makeUncomfirmedMarker():
-	$Peg.color = Color.PURPLE
-	$Peg.visible = true
-	isMarkedForShot = true
-
+	if not isMarkedForShot and not confirmed:
+		$Peg.color = Color.PURPLE
+		$Peg.visible = true
+		isMarkedForShot = true
+		return true
 func makeHitMarker():
 	$Peg.color = Color.RED
 	$Peg.visible = true
-
 func makeHMissMarker():
 	$Peg.color = Color.WHITE
 	$Peg.visible = true

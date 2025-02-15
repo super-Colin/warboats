@@ -1,0 +1,27 @@
+[gd_scene load_steps=2 format=3 uid="uid://0eoaflvdse3"]
+
+[ext_resource type="Script" path="res://UI/debug_panel.gd" id="1_1mbwq"]
+
+[node name="DebugPanel" type="Control"]
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 3
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+grow_horizontal = 0
+script = ExtResource("1_1mbwq")
+
+[node name="GamePhase" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+theme_override_font_sizes/font_size = 32
+text = "Game Phase:"
+
+[node name="GameSubPhase" type="Label" parent="."]
+unique_name_in_owner = true
+offset_right = 40.0
+offset_bottom = 23.0
+theme_override_font_sizes/font_size = 32
+text = "Game Phase:"
