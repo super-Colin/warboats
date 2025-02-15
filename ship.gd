@@ -1,10 +1,11 @@
 extends Control
 
 @export var shipShape:Vector2 = Vector2(1, 3)
-@export var shipId:int = 3
 @export var targetPoints = 3
 @export var deployCost = 3
 @export var shotsAvailable = 1
+
+@onready var shipId:int = $'.'.get_instance_id()
 
 var textures
 var placedAt:Vector2 
@@ -19,7 +20,6 @@ func getDropInfo():
 func _get_drag_data(at_position: Vector2) -> Variant:
 	set_drag_preview($'.'.duplicate())
 	dragging = true
-	#return getDropInfo()
 	return $'.'
 
 
@@ -31,12 +31,11 @@ func _notification(what: int) -> void:
 			#print("ship - drag ended")
 			dragging = false
 			if is_drag_successful():
-				print("ship - drag was successful")
+				#print("ship - drag was successful")
 				$'.'.visible = false
 				#Globals.s_removeShipFromBoard.emit(shipId)
-				
 			else:
-				print("ship - drag was NOT successful")
+				#print("ship - drag was NOT successful")
 				Globals.s_clearBoardHighlights.emit()
 
 

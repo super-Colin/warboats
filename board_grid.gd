@@ -10,6 +10,8 @@ var shipsContained = []
 
 var cell_scene = preload("res://grid_cell.tscn")
 
+signal s_removeShipFromBoard(shipId)
+signal s_clearBoardHighlights
 
 
 func _ready() -> void:
@@ -29,19 +31,27 @@ func _ready() -> void:
 
 func setShipIntoGrid(ship:Node, startingCoord:Vector2):
 	print("grid - setting ship")
-	Globals.s_removeShipFromBoard.emit(ship.shipId)
-	Globals.s_clearBoardHighlights.emit()
+	if isShipAlreadyInBoard(ship):
+		s_removeShipFromBoard.emit(ship.shipId)
+		
+	s_clearBoardHighlights.emit()
 	for x in ship.shipShape.x:
 		var xActual =  startingCoord.x + x
 		for y in ship.shipShape.y:
 			var yActual =  startingCoord.y + y
-			cellsRefs[xActual][yActual].isShip = true
-			cellsRefs[xActual][yActual].shipRef = ship # while placing ships, ship is still invisible on the side invisible
 			var shipTextureTile = ship.get_node("x"+str(x)+"y"+str(y)).texture
-			cellsRefs[xActual][yActual].texture = shipTextureTile
-			cellsRefs[xActual][yActual].draggable = true
-	shipsContained.append(ship)
+			cellsRefs[xActual][yActual].setShipTexture(ship, shipTextureTile)
+	if not isShipAlreadyInBoard(ship):
+		shipsContained.append(ship)
 	Globals.s_deployBoardChanged.emit()
+
+func isShipAlreadyInBoard(shipId):
+	if shipsContained.has(shipId):
+		return true
+	return false
+
+#func changingShipSpot():
+	#
 
 
 func calcTotalTargetPoints():
@@ -117,6 +127,7 @@ func makeCells():
 			newCell.position = Vector2(cellSize.x * x, cellSize.y * y)
 			#newCell.position += halfCellSize # add offset since the position is based on the center of then cell
 			$'.'.add_child(newCell)
+			
 			cellsRefs[x].append(newCell)
 	#print("grid - cellRefs: ", cellsRefs)
 

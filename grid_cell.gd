@@ -13,8 +13,9 @@ var isMarkedForShot = false
 var confirmed = false
 
 func _ready() -> void:
-	Globals.s_clearBoardHighlights.connect(disableHighlight)
-	Globals.s_removeShipFromBoard.connect(removeShipSprite)
+	if $'.'.get_parent().has_signal("s_clearBoardHighlights"):
+		$'.'.get_parent().s_clearBoardHighlights.connect(disableHighlight)
+		$'.'.get_parent().s_removeShipFromBoard.connect(removeShipSprite)
 	Globals.s_deployReady.connect(lockIntoPlace)
 	Globals.s_confirmShotMarkers.connect(_confirmShotMarker)
 	Globals.s_resetShotMarkers.connect(_resetShotMarkers)
@@ -27,6 +28,20 @@ func setSize(newSize:Vector2):
 	$'.'.custom_minimum_size = newSize
 	$Highlight.custom_minimum_size = newSize
 
+func setShipTexture(ship:Node, textureAtlas):
+	isShip = true
+	shipRef = ship 
+	$'.'.texture = textureAtlas
+	draggable = true
+
+
+
+func removeShipSprite(shipId):
+	if isShip and shipRef.shipId == shipId:
+		#print("cell - clearing out ship sprite, at coords: ", coords)
+		$'.'.texture = null
+		draggable = false
+		isShip = false
 
 
 
@@ -42,10 +57,6 @@ func isEmpty():
 	if not confirmed and not isShip:
 		return true
 
-func removeShipSprite(shipId):
-	if isShip and shipRef.shipId == shipId:
-		#print("cell - clearing out ship sprite, at coords: ", coords)
-		$'.'.texture = null
 
 # Drag and Drop
 func _get_drag_data(at_position: Vector2) -> Variant:
