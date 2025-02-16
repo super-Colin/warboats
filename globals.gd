@@ -26,19 +26,21 @@ var enemyGrid:Node
 var hitMarkerGrid:Node
 
 enum BattlePhases {MENU=0, DEPLOY=1, BATTLE=2}
+signal s_battlePhaseChanged
 var currentBattlePhase:BattlePhases = BattlePhases.MENU:
 	set(newVal):
 		currentBattlePhase = newVal
 		s_battlePhaseChanged.emit()
-signal s_battlePhaseChanged
 
 #var friendlyGridRef:Node
 
 func calcRemainingShots():
 	return friendlyGrid.calcTotalShots() - enemyGrid.calcTotalMarkers()
 
-signal s_deployBoardChanged
-
+#signal s_deployBoardChanged
+signal s_boardChanged
+signal s_spentDeployPoints(amount:int)
+signal s_refundDeployPoints(amount:int)
 
 func _ready() -> void:
 	#s_friendlySideReady.connect(func(): friendlySideReady = true)

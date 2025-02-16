@@ -4,14 +4,20 @@ extends Node2D
 @export var cellSize:Vector2 = Vector2(40, 40)
 @export var friendly:bool = true
 var cellsRefs = []
-var currentlyHighlightedCells = []
-var unconfirmedShots = 0
-var shipsContained = []
+var shipsContained = [] :
+	set(newVal):
+		shipsContained = newVal
+		Globals.s_boardChanged.emit()
 
 var cell_scene = preload("res://grid_cell.tscn")
 
 signal s_removeShipFromBoard(shipId)
 signal s_clearBoardHighlights
+
+var currentlyHighlightedCells = []
+var unconfirmedShots = 0
+var startingDeployPoints = 20
+var minTargetPoints = 30
 
 
 func _ready() -> void:
@@ -31,9 +37,8 @@ func _ready() -> void:
 
 func setShipIntoGrid(ship:Node, startingCoord:Vector2):
 	print("grid - setting ship")
-	if isShipAlreadyInBoard(ship):
+	if shipsContained.has(ship):
 		s_removeShipFromBoard.emit(ship.shipId)
-		
 	s_clearBoardHighlights.emit()
 	for x in ship.shipShape.x:
 		var xActual =  startingCoord.x + x
@@ -41,17 +46,17 @@ func setShipIntoGrid(ship:Node, startingCoord:Vector2):
 			var yActual =  startingCoord.y + y
 			var shipTextureTile = ship.get_node("x"+str(x)+"y"+str(y)).texture
 			cellsRefs[xActual][yActual].setShipTexture(ship, shipTextureTile)
-	if not isShipAlreadyInBoard(ship):
+	if not shipsContained.has(ship):
 		shipsContained.append(ship)
-	Globals.s_deployBoardChanged.emit()
+		#Globals.s_spentDeployPoints.emit(ship.deployCost)
+		Globals.s_boardChanged.emit()
+	#Globals.s_deployBoardChanged.emit()
 
-func isShipAlreadyInBoard(shipId):
-	if shipsContained.has(shipId):
-		return true
-	return false
+func removeShipFromBoard(ship:Node):
+	#Globals.s_refundDeployPoints.emit(ship.deployCost)
+	s_removeShipFromBoard.emit(ship.shipId)
+	Globals.s_boardChanged.emit()
 
-#func changingShipSpot():
-	#
 
 
 func calcTotalTargetPoints():
@@ -62,7 +67,11 @@ func calcTotalTargetPoints():
 	return total
 
 func calcSpentDeployPoints():
-	return 10
+	var total = 0
+	for s in shipsContained:
+		#total += shipsContained[s]
+		total += s.deployCost
+	return total
 
 
 
@@ -93,7 +102,7 @@ func calcRemainingShots():
 
 
 # could add red highlight for incompatible cells, but thats a lot
-func hightlightShape(shape:Vector2, startingCoord:Vector2=Vector2.ZERO):
+func hightlightShape(shape:Vector2, startingCoord:Vector2=Vector2.ZERO)->bool:
 	for c in currentlyHighlightedCells:
 		c.disableHighlight()
 	var allGood = true

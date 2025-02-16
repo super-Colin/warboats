@@ -6,7 +6,7 @@ extends Control
 func _ready() -> void:
 	updatePhaseLabel()
 	Globals.s_battlePhaseChanged.connect(updatePhaseLabel)
-	Globals.s_deployBoardChanged.connect(updateFleet)
+	Globals.s_boardChanged.connect(updateFleet)
 
 func updateFleet():
 	%Fleet.text = str(Globals.friendlyGrid.shipsContained) 

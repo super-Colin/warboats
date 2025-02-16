@@ -1,0 +1,47 @@
+[gd_scene load_steps=2 format=3 uid="uid://tw30s3tgimup"]
+
+[ext_resource type="Script" path="res://UI/multiplayer_menu.gd" id="1_bpj6q"]
+
+[node name="MultiPlayerMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_bpj6q")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="HostServer" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 36
+text = "Host Server"
+
+[node name="JoinServer" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 36
+text = "Join` Server"
+
+[node name="IP" type="LineEdit" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Port" type="LineEdit" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="UserName" type="LineEdit" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Maxplayers" type="LineEdit" parent="VBoxContainer"]
+visible = false
+layout_mode = 2
+text = "2"
+placeholder_text = "2"
