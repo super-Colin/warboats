@@ -61,7 +61,7 @@ func _beginBattlePhase():
 
 
 
-var roundMinTargetPoints = 30
+var roundMinTargetPoints = 1
 var roundDeployPoints = 20
 
 

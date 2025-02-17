@@ -33,6 +33,8 @@ func startClient(ip, port:int):
 func isAuthority():
 	return get_multiplayer_authority() != multiplayer.get_unique_id()
 
+func id():
+	return multiplayer.get_unique_id()
 
 # Host
 func _peer_connected(id:int):

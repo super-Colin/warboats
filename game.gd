@@ -1,4 +1,4 @@
-extends Node2D
+extends Control
 
 
 func _ready() -> void:
@@ -9,9 +9,10 @@ func _ready() -> void:
 
 
 func _beginDeployPhase():
-	$Menus/DeployMenu.visible = true
-	$freindly.visible = true
-	$enemy.visible = true
+	$MultiPlayerMenu.visible = false
+	$Board.visible = true
+
+
 
 func _deployReady():
 	Globals.s_beginBattlePhase.emit()

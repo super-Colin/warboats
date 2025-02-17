@@ -7,12 +7,14 @@ var cellsRefs = []
 var shipsContained = [] :
 	set(newVal):
 		shipsContained = newVal
-		Globals.s_boardChanged.emit()
+		s_boardChanged.emit()
 
 var cell_scene = preload("res://grid_cell.tscn")
 
 signal s_removeShipFromBoard(shipId)
 signal s_clearBoardHighlights
+signal s_boardChanged
+
 
 var currentlyHighlightedCells = []
 var unconfirmedShots = 0
@@ -35,6 +37,7 @@ func _ready() -> void:
 
 
 
+
 func setShipIntoGrid(ship:Node, startingCoord:Vector2):
 	print("grid - setting ship")
 	if shipsContained.has(ship):
@@ -48,14 +51,21 @@ func setShipIntoGrid(ship:Node, startingCoord:Vector2):
 			cellsRefs[xActual][yActual].setShipTexture(ship, shipTextureTile)
 	if not shipsContained.has(ship):
 		shipsContained.append(ship)
-		#Globals.s_spentDeployPoints.emit(ship.deployCost)
-		Globals.s_boardChanged.emit()
-	#Globals.s_deployBoardChanged.emit()
+		s_boardChanged.emit()
+	ship.placedAt = startingCoord
+
+func lockShipsIntoPlace():
+	for c in $'.'.get_children():
+		c.lockIntoPlace()
+
+
+
 
 func removeShipFromBoard(ship:Node):
 	#Globals.s_refundDeployPoints.emit(ship.deployCost)
 	s_removeShipFromBoard.emit(ship.shipId)
 	Globals.s_boardChanged.emit()
+	# TODO make removable..?
 
 
 
@@ -160,6 +170,7 @@ func disableHighlightSpot(coords):
 
 func _resetShotMarkers():
 	unconfirmedShots = 0
+
 func _placeShotMarker(coords):
 	if not Globals.currentBattlePhase == Globals.BattlePhases.BATTLE:
 		return

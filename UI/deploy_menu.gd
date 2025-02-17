@@ -1,19 +1,22 @@
 extends Control
 
-@onready var remainingDeployPoints = Globals.roundDeployPoints
+#@onready var remainingDeployPoints = Globals.roundDeployPoints
 #var startingDeployPoints = 20
 
+signal s_deployConfirmed
+
 func _ready() -> void:
-	%ReadyButton.pressed.connect(func():Globals.s_deployReady.emit())
-	Globals.s_beginBattlePhase.connect(_beginBattlePhase)
-	Globals.s_boardChanged.connect(_boardUpdated)
-	setShowReadyWuttonNotReady()
+	#%ReadyButton.pressed.connect(func():Globals.s_deployReady.emit())
+	%ReadyButton.pressed.connect(func():s_deployConfirmed.emit())
+	#Globals.s_beginBattlePhase.connect(_beginBattlePhase)
+	#Globals.s_boardChanged.connect(_boardUpdated)
+	deployCanNotBeConfirmed()
 
-func _beginBattlePhase():
-	$'.'.visible = false
-	_boardUpdated()
+#func _beginBattlePhase():
+	#$'.'.visible = false
+	#updateLabels()
 
-func _boardUpdated():
+func updateLabels():
 	updateDeployPoints()
 	updateTargetPoints()
 
@@ -24,8 +27,9 @@ func updateDeployPoints():
 func updateTargetPoints():
 	%TargetPoints.text = "Target Points: " + str(Globals.friendlyGrid.calcTotalTargetPoints()) + "/" + str(Globals.roundMinTargetPoints)
 
-func setShowReadyWuttonNotReady():
+
+func deployCanNotBeConfirmed():
 	%ReadyButton.modulate = "d82643"
 
-func setShowReadyWuttonIsReady():
+func deployCanBeConfirmed():
 	%ReadyButton.modulate = "3dc300"

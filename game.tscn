@@ -1,40 +1,31 @@
-[gd_scene load_steps=7 format=3 uid="uid://be72kyjs10j0x"]
+[gd_scene load_steps=5 format=3 uid="uid://be72kyjs10j0x"]
 
 [ext_resource type="Script" path="res://game.gd" id="1_hl5wc"]
-[ext_resource type="PackedScene" uid="uid://c8o6dr3fknptg" path="res://board_grid.tscn" id="1_pion6"]
-[ext_resource type="PackedScene" uid="uid://dbkjmy0ilupqk" path="res://UI/deploy_menu.tscn" id="3_a2hi3"]
-[ext_resource type="PackedScene" uid="uid://d03hcdnfcf6og" path="res://UI/battle_menu.tscn" id="3_l235k"]
+[ext_resource type="PackedScene" uid="uid://ugyxohxdxp8f" path="res://board.tscn" id="3_wcsvu"]
 [ext_resource type="PackedScene" uid="uid://64o0w5isorff" path="res://UI/debug_panel.tscn" id="4_ur8tl"]
 [ext_resource type="PackedScene" uid="uid://tw30s3tgimup" path="res://UI/multiplayer_menu.tscn" id="5_p7d0p"]
 
-[node name="Game" type="Node2D"]
+[node name="Game" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 script = ExtResource("1_hl5wc")
 
-[node name="Overlay" type="CanvasLayer" parent="."]
+[node name="DebugPanel" parent="." instance=ExtResource("4_ur8tl")]
+layout_mode = 1
+offset_left = -450.0
 
-[node name="Menus" type="CanvasLayer" parent="."]
-
-[node name="DeployMenu" parent="Menus" instance=ExtResource("3_a2hi3")]
+[node name="Board" parent="." instance=ExtResource("3_wcsvu")]
 visible = false
+layout_mode = 1
 
-[node name="BattleMenu" parent="Menus" instance=ExtResource("3_l235k")]
-visible = false
-
-[node name="DebugPanel" parent="Menus" instance=ExtResource("4_ur8tl")]
-
-[node name="MultiPlayerMenu" parent="Menus" instance=ExtResource("5_p7d0p")]
-
-[node name="freindly" parent="." instance=ExtResource("1_pion6")]
-visible = false
-offset_left = 467.0
-offset_top = 209.0
-offset_right = 847.0
-offset_bottom = 589.0
-
-[node name="enemy" parent="." instance=ExtResource("1_pion6")]
-visible = false
-offset_left = 989.0
-offset_top = 210.0
-offset_right = 1369.0
-offset_bottom = 590.0
-friendly = false
+[node name="MultiPlayerMenu" parent="." instance=ExtResource("5_p7d0p")]
+layout_mode = 1
+anchors_preset = 15
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0

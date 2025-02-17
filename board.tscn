@@ -1,5 +1,6 @@
-[gd_scene load_steps=4 format=3 uid="uid://ugyxohxdxp8f"]
+[gd_scene load_steps=5 format=3 uid="uid://ugyxohxdxp8f"]
 
+[ext_resource type="Script" path="res://board.gd" id="1_hi53t"]
 [ext_resource type="PackedScene" uid="uid://dbkjmy0ilupqk" path="res://UI/deploy_menu.tscn" id="1_of124"]
 [ext_resource type="PackedScene" uid="uid://c8o6dr3fknptg" path="res://board_grid.tscn" id="1_rgxrr"]
 [ext_resource type="PackedScene" uid="uid://d03hcdnfcf6og" path="res://UI/battle_menu.tscn" id="3_n8rou"]
@@ -11,10 +12,10 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_hi53t")
 
-[node name="DeployMenu" parent="." instance=ExtResource("1_of124")]
-
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
+[node name="Grids" type="HBoxContainer" parent="."]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -28,27 +29,35 @@ offset_bottom = 203.5
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Friendly" type="VBoxContainer" parent="HBoxContainer"]
+[node name="Friendly" type="VBoxContainer" parent="Grids"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="HBoxContainer/Friendly"]
+[node name="Label" type="Label" parent="Grids/Friendly"]
 layout_mode = 2
 text = "Not Ready"
 horizontal_alignment = 1
 
-[node name="Grid" parent="HBoxContainer/Friendly" instance=ExtResource("1_rgxrr")]
+[node name="Grid" parent="Grids/Friendly" instance=ExtResource("1_rgxrr")]
 layout_mode = 2
 
-[node name="Enemy" type="VBoxContainer" parent="HBoxContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="Grids"]
+custom_minimum_size = Vector2(30, 0)
 layout_mode = 2
 
-[node name="Label" type="Label" parent="HBoxContainer/Enemy"]
+[node name="Enemy" type="VBoxContainer" parent="Grids"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Grids/Enemy"]
 layout_mode = 2
 text = "Not Ready"
 horizontal_alignment = 1
 
-[node name="Grid" parent="HBoxContainer/Enemy" instance=ExtResource("1_rgxrr")]
+[node name="Grid" parent="Grids/Enemy" instance=ExtResource("1_rgxrr")]
 layout_mode = 2
+friendly = false
+
+[node name="DeployMenu" parent="." instance=ExtResource("1_of124")]
+layout_mode = 1
 
 [node name="BattleMenu" parent="." instance=ExtResource("3_n8rou")]
 visible = false
