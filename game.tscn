@@ -26,9 +26,15 @@ visible = false
 
 [node name="freindly" parent="." instance=ExtResource("1_pion6")]
 visible = false
-position = Vector2(467, 209)
+offset_left = 467.0
+offset_top = 209.0
+offset_right = 847.0
+offset_bottom = 589.0
 
 [node name="enemy" parent="." instance=ExtResource("1_pion6")]
 visible = false
-position = Vector2(989, 210)
+offset_left = 989.0
+offset_top = 210.0
+offset_right = 1369.0
+offset_bottom = 590.0
 friendly = false

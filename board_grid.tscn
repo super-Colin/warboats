@@ -3,14 +3,18 @@
 [ext_resource type="Script" path="res://board_grid.gd" id="1_tpt1s"]
 [ext_resource type="PackedScene" uid="uid://dcei64kwnh4vv" path="res://grid_cell.tscn" id="2_48pd0"]
 
-[node name="BoardGrid" type="Node2D"]
+[node name="BoardGrid" type="Control"]
+custom_minimum_size = Vector2(380, 380)
+layout_mode = 3
+anchors_preset = 0
 script = ExtResource("1_tpt1s")
 
-[node name="Cells" type="Node2D" parent="."]
-
-[node name="GridCell" parent="Cells" instance=ExtResource("2_48pd0")]
+[node name="GridCell" parent="." instance=ExtResource("2_48pd0")]
+layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
+
+[node name="Cells" type="Node2D" parent="."]
 
 [node name="GridCell2" parent="Cells" instance=ExtResource("2_48pd0")]
 offset_left = 42.0
@@ -328,8 +332,3 @@ offset_left = 298.0
 offset_top = 276.0
 offset_right = 338.0
 offset_bottom = 316.0
-
-[node name="Label" type="Label" parent="."]
-offset_right = 48.0
-offset_bottom = 23.0
-text = "Not Ready"

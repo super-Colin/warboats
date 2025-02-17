@@ -1,4 +1,4 @@
-extends Node2D
+extends Control
 
 @export var gridSize:Vector2 = Vector2(12, 12)
 @export var cellSize:Vector2 = Vector2(40, 40)
@@ -21,7 +21,7 @@ var minTargetPoints = 30
 
 
 func _ready() -> void:
-	for c in $Cells.get_children(): # current cells are only there to be visibile in the editor
+	for c in $'.'.get_children(): # current cells are only there to be visibile in the editor
 		c.queue_free()
 	if friendly:
 		Globals.friendlyGrid = $'.'
@@ -135,9 +135,10 @@ func makeCells():
 			newCell.setSize(cellSize)
 			newCell.position = Vector2(cellSize.x * x, cellSize.y * y)
 			#newCell.position += halfCellSize # add offset since the position is based on the center of then cell
-			$Cells.add_child(newCell)
+			$'.'.add_child(newCell)
 			
 			cellsRefs[x].append(newCell)
+	$'.'.custom_minimum_size = gridSize * cellSize
 	#print("grid - cellRefs: ", cellsRefs)
 
 
