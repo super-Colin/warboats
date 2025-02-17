@@ -6,6 +6,7 @@
 [node name="DeployMenu" type="Control"]
 layout_mode = 3
 anchors_preset = 0
+pivot_offset = Vector2(117, 862)
 mouse_filter = 1
 script = ExtResource("1_d8m1q")
 

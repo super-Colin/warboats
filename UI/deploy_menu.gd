@@ -4,7 +4,7 @@ extends Control
 #var startingDeployPoints = 20
 
 func _ready() -> void:
-	%Ready.pressed.connect(func():Globals.s_deployReady.emit())
+	%ReadyButton.pressed.connect(func():Globals.s_deployReady.emit())
 	Globals.s_beginBattlePhase.connect(_beginBattlePhase)
 	Globals.s_boardChanged.connect(_boardUpdated)
 	setShowReadyWuttonNotReady()

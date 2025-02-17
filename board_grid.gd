@@ -21,7 +21,7 @@ var minTargetPoints = 30
 
 
 func _ready() -> void:
-	for c in $'.'.get_children(): # current cells are only there to be visibile in the editor
+	for c in $Cells.get_children(): # current cells are only there to be visibile in the editor
 		c.queue_free()
 	if friendly:
 		Globals.friendlyGrid = $'.'
@@ -135,7 +135,7 @@ func makeCells():
 			newCell.setSize(cellSize)
 			newCell.position = Vector2(cellSize.x * x, cellSize.y * y)
 			#newCell.position += halfCellSize # add offset since the position is based on the center of then cell
-			$'.'.add_child(newCell)
+			$Cells.add_child(newCell)
 			
 			cellsRefs[x].append(newCell)
 	#print("grid - cellRefs: ", cellsRefs)

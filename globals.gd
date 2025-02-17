@@ -1,5 +1,12 @@
 extends Node
 
+
+signal s_beginDeployPhase
+
+
+
+
+
 signal s_placeShotMarker(coords:Vector2)
 signal s_placedShotMarker
 signal s_confirmShotMarkers

@@ -2,8 +2,16 @@ extends Node2D
 
 
 func _ready() -> void:
+	#Globals.gameRef = $'.'
 	Globals.s_sideReady.connect(_sideReadied)
 	Globals.s_deployReady.connect(_deployReady)
+	Globals.s_beginDeployPhase.connect(_beginDeployPhase)
+
+
+func _beginDeployPhase():
+	$Menus/DeployMenu.visible = true
+	$freindly.visible = true
+	$enemy.visible = true
 
 func _deployReady():
 	Globals.s_beginBattlePhase.emit()
