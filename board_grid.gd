@@ -12,7 +12,8 @@ var shipsContained = [] :
 var cell_scene = preload("res://grid_cell.tscn")
 
 var shipScenes = {
-	"1":preload("res://ship.tscn")
+	"1":preload("res://ship.tscn"),
+	"2":preload("res://ship2.tscn")
 }
 
 signal s_removeShipFromBoard(shipId)
@@ -20,7 +21,8 @@ signal s_clearBoardHighlights
 signal s_boardChanged
 
 signal s_resetUncomfirmedMarkers
-
+signal s_try_placeShotMarker(coords)
+signal s_confirmShotMarkers
 
 
 var currentlyHighlightedCells = []
@@ -140,32 +142,9 @@ func calcSpentDeployPoints():
 		total += s.deployCost
 	return total
 
-#
-#
-#func addToUnconfirmedShots():
-	#unconfirmedShots += 1
-#
-#func calcTotalShots():
-	#return 5
-#
-#func calcTotalMarkers():
-	#return unconfirmedShots
-#
-#func calcRemainingShots():
-	#return calcTotalShots() - unconfirmedShots
 
 
 
-
-#func doesShapeFit(shape:Vector2, startingCoord:Vector2=Vector2.ZERO):
-	#for x in shape.x:
-		#if not cellsRefs.size() > x:
-			#print("ran out of space on the x axis")
-			#return false
-		#for y in shape.y:
-			#if not cellsRefs[x].size() > y:
-				#print("ran out of space on the y axis")
-				#return false
 
 
 # could add red highlight for incompatible cells, but thats a lot
@@ -208,7 +187,7 @@ func makeCells():
 	$'.'.custom_minimum_size = gridSize * cellSize
 	#print("grid - cellRefs: ", cellsRefs)
 
-signal s_try_placeShotMarker(coords)
+
 
 func _try_placeShotMarker(coords):
 	if not Globals.currentBattlePhase == Globals.BattlePhases.BATTLE:
@@ -221,8 +200,28 @@ func _try_placeShotMarker(coords):
 		#print("grid - shots left: ", calcRemainingShots(), ", unconfirmed shots: ", unconfirmedShots)
 	#else:
 		#print("grid - no shots left")
-func placeShotMarker(coords):
+
+func placeShotMarker(coords, confirmShot=false):
 	cellsRefs[coords.x][coords.y].makeUncomfirmedMarker()
+	if confirmShot:
+		#var wasHit = cellsRefs[coords.x][coords.y].confirmShot_dict()
+		return confirmShot_dict(coords)
+
+func confirmShot_bool(coords):
+	if cellsRefs[coords.x][coords.y]._confirmShotMarker().hit:
+		return true
+	return false
+
+func confirmShot_dict(coords):
+	return cellsRefs[coords.x][coords.y]._confirmShotMarker()
+
+
+
+func forceAddShotFromHost(shotCoord, hit=false):
+	if hit:
+		cellsRefs[shotCoord.x][shotCoord.y].forceConfirmedHit()
+	else:
+		cellsRefs[shotCoord.x][shotCoord.y].forceConfirmedMiss()
 
 
 
@@ -241,5 +240,4 @@ func disableHighlightSpot(coords):
 	cellsRefs[coords.x][coords.y].disableHighlight()
 
 func _resetShotMarkers():
-	#unconfirmedShots = 0
 	s_resetUncomfirmedMarkers.emit()

@@ -1,22 +1,20 @@
-[gd_scene load_steps=9 format=3 uid="uid://itme5k35by6a"]
+[gd_scene load_steps=6 format=3 uid="uid://itme5k35by6a"]
 
 [ext_resource type="Script" path="res://ship.gd" id="1_io287"]
 [ext_resource type="PackedScene" uid="uid://dcei64kwnh4vv" path="res://grid_cell.tscn" id="2_cr2a1"]
 [ext_resource type="Texture2D" uid="uid://dpfx0008rvwdq" path="res://ships/ship1/x0y0.tres" id="3_yh7ec"]
 [ext_resource type="Texture2D" uid="uid://chnqdpbix8uvb" path="res://ships/ship1/x0y1.tres" id="4_2uyuu"]
 [ext_resource type="Texture2D" uid="uid://btgq84vow1dfw" path="res://ships/ship1/x0y2.tres" id="5_0pepo"]
-[ext_resource type="Texture2D" uid="uid://b2p0lj16mmeqx" path="res://ships/ship1/x1y0.tres" id="6_sp3mx"]
-[ext_resource type="Texture2D" uid="uid://ciu1dciqtp4s5" path="res://ships/ship1/x1y1.tres" id="7_7m17f"]
-[ext_resource type="Texture2D" uid="uid://coxai1jho10wt" path="res://ships/ship1/x1y2.tres" id="8_52djq"]
 
 [node name="Ship" type="Control"]
 modulate = Color(1, 0.831399, 0.824182, 1)
-custom_minimum_size = Vector2(80, 120)
+custom_minimum_size = Vector2(40, 120)
 layout_mode = 3
 anchors_preset = 0
-offset_right = 80.0
+offset_right = 40.0
 offset_bottom = 120.0
 script = ExtResource("1_io287")
+shipType = 2
 targetPoints = 5
 
 [node name="x0y0" parent="." instance=ExtResource("2_cr2a1")]
@@ -43,33 +41,4 @@ offset_right = 40.0
 offset_bottom = 127.0
 mouse_filter = 2
 texture = ExtResource("5_0pepo")
-droppable = false
-
-[node name="x1y0" parent="." instance=ExtResource("2_cr2a1")]
-layout_mode = 0
-offset_left = 42.0
-offset_right = 82.0
-offset_bottom = 40.0
-mouse_filter = 2
-texture = ExtResource("6_sp3mx")
-droppable = false
-
-[node name="x1y1" parent="." instance=ExtResource("2_cr2a1")]
-layout_mode = 0
-offset_left = 43.0
-offset_top = 44.0
-offset_right = 83.0
-offset_bottom = 84.0
-mouse_filter = 2
-texture = ExtResource("7_7m17f")
-droppable = false
-
-[node name="x1y2" parent="." instance=ExtResource("2_cr2a1")]
-layout_mode = 0
-offset_left = 43.0
-offset_top = 87.0
-offset_right = 83.0
-offset_bottom = 127.0
-mouse_filter = 2
-texture = ExtResource("8_52djq")
 droppable = false

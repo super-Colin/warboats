@@ -10,7 +10,7 @@ extends Control
 @onready var shipId:int = $'.'.get_instance_id()
 
 var textures
-var placedAt:Vector2 
+var placedAt:Vector2 = Vector2.ZERO
 var dragging = false
 var dead = false
 
@@ -23,7 +23,8 @@ func simpleDict():
 		"shipType": shipType,
 	}
 
-
+func tileCoordsInShip():
+	print("ship - getting related coords")
 
 func _get_drag_data(at_position: Vector2) -> Variant:
 	set_drag_preview($'.'.duplicate())

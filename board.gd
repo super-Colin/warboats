@@ -41,7 +41,7 @@ func addToUnconfirmedShots():
 	unconfirmedShots += 1
 
 
-
+@rpc("authority", "call_local", "reliable")
 func _confirmShotMarkers():
 	confirmedShotCoords = $Grids/Enemy/Grid.getUnconfirmedShotPlacements(true)
 	print("board - confirming shots: ", confirmedShotCoords)
@@ -49,21 +49,54 @@ func _confirmShotMarkers():
 
 
 var shotsToPlayOut = {}
+
 @rpc("any_peer", "call_local", "reliable")
-func registerConfirmedShots(pId, shots:Array[Vector2]):
-	if Network.isAuthority():
-		print("board - shots from player: ", pId, ", adding shots to play out: ", shots)
-		shotsToPlayOut[pId] = shots
-		if shotsToPlayOut.size() == 2:
-			print("board - both players have confirmed shots")
-			playOutConfirmedShots.rpc()
+func registerConfirmedShots(pId, shots):
+	print("board - shots from player: ", pId, ", adding shots to play out: ", shots)
+	shotsToPlayOut[pId] = shots
+	#print("board -  shots to play out: ", shotsToPlayOut)
+	if Network.isAuthority() and shotsToPlayOut.size() == 2:
+			print("board - [host] both players have confirmed shots")
+			#playOutConfirmedShots.rpc()
+			handleConfirmedShots_host()
 
 
 
-@rpc("authority", "call_local", "reliable")
-func playOutConfirmedShots():
-	print("board - playing out confirmed shots")
-	
+
+
+#@rpc("authority", "call_local", "reliable")
+#func playOutConfirmedShots():
+	#print("board - playing out confirmed shots")
+	#if Network.isAuthority():
+		#handleConfirmedShots_host()
+	#else:
+		#print("board - [client] shotsToPlayOut: ", shotsToPlayOut)
+		#for s in shotsToPlayOut[1]: # 1 is always server authority 
+			#$Grids/Friendly/Grid.placeShotMarker(s, true)
+			##$Grids/Enemy/Grid.addShotFromHost()
+
+var shotResultsForClient = [] # {"hit":false, "coords":Vector2.ZERO}, ...
+func handleConfirmedShots_host():
+	#print("board - shotResultsForClient: ", shotResults)
+	for clientShot in shotsToPlayOut[Network.otherPlayerId]:
+		# create results of shots against host side, to pass to client
+		shotResultsForClient.append($Grids/Friendly/Grid.placeShotMarker(clientShot, true))
+	for hostShot in shotsToPlayOut[Network.id()]:
+		$Grids/Enemy/Grid.confirmShot_bool(hostShot)
+	handleConfirmedShots_client.rpc(shotResultsForClient)
+
+#@rpc("any_peer", "call_remote", "reliable")
+@rpc("authority", "call_remote", "reliable")
+func handleConfirmedShots_client(shotResults):
+	print("board - ", Network.id(),": shotResults: ", shotResults)
+	for s in shotsToPlayOut[1]: # 1 is always server authority 
+		$Grids/Friendly/Grid.placeShotMarker(s, true)
+	for s in shotResults: # 1 is always server authority 
+		$Grids/Enemy/Grid.forceAddShotFromHost(s.coords, s.hit)
+
+#func addShotsFromHost(shots):
+	#addShotFromHost()
+	#pass
 
 
 var shipPositions = {}
@@ -88,7 +121,7 @@ func updateReadyStateLabels(pId, gridShipsContainedDicts):
 		print("board - both players ready")
 		#shipPositions[Network.otherPlayerId]
 		addShipsToEnemyBoard(shipPositions[Network.otherPlayerId])
-		_beginBattlePhase()
+		_beginBattlePhase.rpc()
 
 
 

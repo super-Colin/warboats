@@ -5,6 +5,7 @@ var otherPlayerId
 
 signal s_connectingAsClient
 signal s_connectedAsClient
+signal s_networkStatusChanged
 
 func setMaxClients(newVal:int):
 	maxClients = newVal
@@ -18,6 +19,7 @@ func startHost(port:int):
 	# connect signals
 	multiplayer.peer_connected.connect(_peer_connected)
 	multiplayer.peer_disconnected.connect(_peer_disconnected)
+	s_networkStatusChanged.emit()
 
 func startClient(ip, port:int):
 	var peer = ENetMultiplayerPeer.new()
@@ -29,29 +31,40 @@ func startClient(ip, port:int):
 	multiplayer.connected_to_server.connect(_connected_to_server)
 	multiplayer.server_disconnected.connect(_server_disconnected)
 	s_connectingAsClient.emit()
+	s_networkStatusChanged.emit()
 
 
 func isAuthority():
 	return get_multiplayer_authority() == multiplayer.get_unique_id()
+
+func isAuthorityAsString():
+	if isAuthority():
+		return "Host"
+	return "Client"
 
 func id():
 	return multiplayer.get_unique_id()
 
 # Host
 func _peer_connected(id:int):
+	s_networkStatusChanged.emit()
 	print("network [host] - Player %s connected" % id)
 	otherPlayerId = id
 
 func _peer_disconnected(id:int):
+	s_networkStatusChanged.emit()
 	print("network [host] - Player %s disconnected" % id)
 
 # Client
 func _connected_to_server():
+	s_networkStatusChanged.emit()
 	print("network [client] - connected to server")
 	s_connectedAsClient.emit()
 
 func _connection_failed():
+	s_networkStatusChanged.emit()
 	print("network [client] - connection failed")
 
 func _server_disconnected():
+	s_networkStatusChanged.emit()
 	print("network [client] - server disconnected")

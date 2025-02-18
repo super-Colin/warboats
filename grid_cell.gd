@@ -20,7 +20,7 @@ func _ready() -> void:
 	if parent.has_signal("s_clearBoardHighlights"):
 		parent.s_clearBoardHighlights.connect(disableHighlight)
 		parent.s_removeShipFromBoard.connect(removeShipSprite)
-		#parent.s_confirmShotMarkers.connect(_confirmShotMarker)
+		parent.s_confirmShotMarkers.connect(_confirmShotMarker)
 		parent.s_resetUncomfirmedMarkers.connect(_resetShotMarkers)
 	#Globals.s_deployReady.connect(lockIntoPlace)
 	#Globals.s_resetShotMarkers.connect(_resetShotMarkers)
@@ -95,19 +95,27 @@ func _resetShotMarkers():
 
 func _confirmShotMarker():
 	if isMarkedForShot:
-		if isShip:
-			makeHitMarker()
-		else:
-			makeMissMarker()
 		isMarkedForShot = false
 		confirmed = true
+		if isShip:
+			makeHitMarker()
+			return {"hit":true,"coords":coords}
+		else:
+			makeMissMarker()
+			return {"hit":false,"coords":coords}
 
 
 
 
-
-
-
+# for when commanded by server host
+func forceConfirmedHit():
+	makeHitMarker()
+	isMarkedForShot = false
+	confirmed = true
+func forceConfirmedMiss():
+	makeMissMarker()
+	isMarkedForShot = false
+	confirmed = true
 
 
 # Hover state

@@ -7,9 +7,8 @@ func _ready() -> void:
 	updatePhaseLabel()
 	Globals.s_battlePhaseChanged.connect(updatePhaseLabel)
 	Globals.s_boardChanged.connect(updateFleet)
-	
-	Globals.s_battlePhaseChanged.connect(updateServerAuthLabel)
-	Globals.s_boardChanged.connect(updateServerAuthLabel)
+	Network.s_networkStatusChanged.connect(updateServerAuthLabel)
+	Network.s_networkStatusChanged.connect(updateServerIdLabel)
 
 func updateFleet():
 	%Fleet.text = str(Globals.friendlyGrid.shipsContained) 
@@ -18,7 +17,6 @@ func updatePhaseLabel():
 	%GamePhase.text = "Game phase: "+str(Globals.BattlePhases.keys()[Globals.currentBattlePhase])
 
 func updateServerAuthLabel():
-	var isAuth = "Yes"
-	if not Network.isAuthority():
-		isAuth = "No"
-	%ServerAuthority.text = "Is Server Authority: " + isAuth 
+	%ServerAuthority.text = "Is Server Authority: " + Network.isAuthorityAsString() 
+func updateServerIdLabel():
+	%ServerId.text = "Server Id: " + str(Network.id())

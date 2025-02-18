@@ -18,7 +18,9 @@ offset_right = 80.0
 offset_bottom = 120.0
 script = ExtResource("1_u0ts2")
 shipShape = Vector2(2, 3)
-deployCost = 5
+targetPoints = 13
+deployCost = 7
+shotsAvailable = 3
 
 [node name="x0y0" parent="." instance=ExtResource("3_7aa8i")]
 layout_mode = 0
