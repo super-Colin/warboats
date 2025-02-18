@@ -57,7 +57,7 @@ layout_mode = 2
 friendly = false
 
 [node name="DeployMenu" parent="." instance=ExtResource("1_of124")]
+visible = false
 layout_mode = 1
 
 [node name="BattleMenu" parent="." instance=ExtResource("3_n8rou")]
-visible = false

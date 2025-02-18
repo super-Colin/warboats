@@ -24,6 +24,7 @@ signal s_resetUncomfirmedMarkers
 signal s_try_placeShotMarker(coords)
 signal s_confirmShotMarkers
 
+signal s_shipKilled(ship)
 
 var currentlyHighlightedCells = []
 #var startingDeployPoints = 20
@@ -183,9 +184,32 @@ func makeCells():
 			#newCell.position += halfCellSize # add offset since the position is based on the center of then cell
 			$'.'.add_child(newCell)
 			newCell.s_try_placeShotMarker.connect(_try_placeShotMarker) # let the signal bubble
+			newCell.s_shipWasHit.connect(_checkIfShipWasKilled)
 			cellsRefs[x].append(newCell)
 	$'.'.custom_minimum_size = gridSize * cellSize
 	#print("grid - cellRefs: ", cellsRefs)
+
+func _checkIfShipWasKilled(ship):
+	for x in ship.shipShape.x:
+		var xActual =  ship.placedAt.x + x
+		for y in ship.shipShape.y:
+			var yActual =  ship.placedAt.y + y
+			if not cellsRefs[xActual][yActual].confirmed:
+				return false
+	markShipAsDead(ship)
+	print("grid - ship was killed: ", ship)
+	ship.dead = true
+	s_shipKilled.emit(ship)
+	return true
+
+func markShipAsDead(ship):
+	for x in ship.shipShape.x:
+		var xActual =  ship.placedAt.x + x
+		for y in ship.shipShape.y:
+			var yActual =  ship.placedAt.y + y
+			cellsRefs[xActual][yActual].modulate = "535353"
+
+
 
 
 

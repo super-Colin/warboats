@@ -13,7 +13,7 @@ var isMarkedForShot = false
 var confirmed = false
 
 signal s_try_placeShotMarker(coord)
-
+signal s_shipWasHit(shipNodeRef)
 
 func _ready() -> void:
 	var parent = $'.'.get_parent()
@@ -99,6 +99,7 @@ func _confirmShotMarker():
 		confirmed = true
 		if isShip:
 			makeHitMarker()
+			s_shipWasHit.emit(shipRef)
 			return {"hit":true,"coords":coords}
 		else:
 			makeMissMarker()
