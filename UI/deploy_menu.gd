@@ -16,16 +16,17 @@ func _ready() -> void:
 	#$'.'.visible = false
 	#updateLabels()
 
-func updateLabels():
-	updateDeployPoints()
-	updateTargetPoints()
+#func updateLabels():
+	#updateDeployPoints()
+	#updateTargetPoints()
 
-func updateDeployPoints():
+func updateDeployPoints(pts):
 	#%DeployPoints.text = "Deploy Points: " + str(Globals.friendlyGrid.calcSpentDeployPoints()) + "/" + str(Globals.roundDeployPoints)
-	%DeployPoints.text = "Deploy Points: " + str(Globals.friendlyGrid.startingDeployPoints - Globals.friendlyGrid.calcSpentDeployPoints())
+	%DeployPoints.text = "Deploy Points: " + str(pts)
 
-func updateTargetPoints():
-	%TargetPoints.text = "Target Points: " + str(Globals.friendlyGrid.calcTotalTargetPoints()) + "/" + str(Globals.roundMinTargetPoints)
+func updateTargetPoints(current, target):
+	#%TargetPoints.text = "Target Points: " + str(Globals.friendlyGrid.calcTotalTargetPoints()) + "/" + str(Globals.roundMinTargetPoints)
+	%TargetPoints.text = "Target Points: " + str(current) + "/" + str(target)
 
 
 func deployCanNotBeConfirmed():

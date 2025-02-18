@@ -22,10 +22,18 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 32
 text = "Game Phase:"
 
+[node name="ServerAuthority" type="Label" parent="VBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "Is Server Authority:"
+autowrap_mode = 2
+
 [node name="Fleet" type="Label" parent="VBoxContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(400, 0)
 layout_mode = 2
 theme_override_font_sizes/font_size = 28
-text = "Game Phase:"
+text = "Fleet:"
 autowrap_mode = 2

@@ -12,13 +12,18 @@ var hoveredOn = false
 var isMarkedForShot = false
 var confirmed = false
 
+signal s_try_placeShotMarker(coord)
+
+
 func _ready() -> void:
-	if $'.'.get_parent().has_signal("s_clearBoardHighlights"):
-		$'.'.get_parent().s_clearBoardHighlights.connect(disableHighlight)
-		$'.'.get_parent().s_removeShipFromBoard.connect(removeShipSprite)
-	Globals.s_deployReady.connect(lockIntoPlace)
-	Globals.s_confirmShotMarkers.connect(_confirmShotMarker)
-	Globals.s_resetShotMarkers.connect(_resetShotMarkers)
+	var parent = $'.'.get_parent()
+	if parent.has_signal("s_clearBoardHighlights"):
+		parent.s_clearBoardHighlights.connect(disableHighlight)
+		parent.s_removeShipFromBoard.connect(removeShipSprite)
+		#parent.s_confirmShotMarkers.connect(_confirmShotMarker)
+		parent.s_resetUncomfirmedMarkers.connect(_resetShotMarkers)
+	#Globals.s_deployReady.connect(lockIntoPlace)
+	#Globals.s_resetShotMarkers.connect(_resetShotMarkers)
 	$'.'.mouse_entered.connect(startHoverState)
 	$'.'.mouse_exited.connect(endHoverState)
 
@@ -48,7 +53,7 @@ func removeShipSprite(shipId):
 func _input(event: InputEvent) -> void:
 	if Input.is_action_just_pressed("MarkShot") and hoveredOn:
 		#print("cell - clicked on: ", coords)
-		Globals.s_placeShotMarker.emit(coords)
+		s_try_placeShotMarker.emit(coords)
 
 func lockIntoPlace():
 	draggable = false
@@ -93,7 +98,7 @@ func _confirmShotMarker():
 		if isShip:
 			makeHitMarker()
 		else:
-			makeHMissMarker()
+			makeMissMarker()
 		isMarkedForShot = false
 		confirmed = true
 
@@ -124,15 +129,18 @@ func clearMarker():
 # Peg color / visibility
 func hidePeg():
 	$Peg.visible = false
-func makeUncomfirmedMarker():
+
+func canBeNewUncomfirmedMarker():
 	if not isMarkedForShot and not confirmed:
-		$Peg.color = Color.PURPLE
-		$Peg.visible = true
-		isMarkedForShot = true
 		return true
+	return false
+func makeUncomfirmedMarker():
+	$Peg.color = Color.PURPLE
+	$Peg.visible = true
+	isMarkedForShot = true
 func makeHitMarker():
 	$Peg.color = Color.RED
 	$Peg.visible = true
-func makeHMissMarker():
+func makeMissMarker():
 	$Peg.color = Color.WHITE
 	$Peg.visible = true

@@ -30,7 +30,7 @@ var enemySideReady= false
 
 var friendlyGrid:Node
 var enemyGrid:Node
-var hitMarkerGrid:Node
+#var hitMarkerGrid:Node
 
 enum BattlePhases {MENU=0, DEPLOY=1, BATTLE=2}
 signal s_battlePhaseChanged
@@ -41,8 +41,8 @@ var currentBattlePhase:BattlePhases = BattlePhases.MENU:
 
 #var friendlyGridRef:Node
 
-func calcRemainingShots():
-	return friendlyGrid.calcTotalShots() - enemyGrid.calcTotalMarkers()
+#func calcRemainingShots():
+	#return friendlyGrid.calcTotalShots() - enemyGrid.calcTotalMarkers()
 
 #signal s_deployBoardChanged
 signal s_boardChanged

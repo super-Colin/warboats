@@ -1,7 +1,9 @@
 extends Control
 
+
+@export var shipType = 1
 @export var shipShape:Vector2 = Vector2(1, 3)
-@export var targetPoints = 3
+@export var targetPoints = 11
 @export var deployCost = 3
 @export var shotsAvailable = 1
 
@@ -10,12 +12,18 @@ extends Control
 var textures
 var placedAt:Vector2 
 var dragging = false
+var dead = false
 
 
-func getDropInfo():
+
+func simpleDict():
 	return {
-		"shipShape":shipShape
+		"placedAt": placedAt,
+		"shipId": shipId,
+		"shipType": shipType,
 	}
+
+
 
 func _get_drag_data(at_position: Vector2) -> Variant:
 	set_drag_preview($'.'.duplicate())

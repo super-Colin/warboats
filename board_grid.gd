@@ -11,16 +11,57 @@ var shipsContained = [] :
 
 var cell_scene = preload("res://grid_cell.tscn")
 
+var shipScenes = {
+	"1":preload("res://ship.tscn")
+}
+
 signal s_removeShipFromBoard(shipId)
 signal s_clearBoardHighlights
 signal s_boardChanged
 
+signal s_resetUncomfirmedMarkers
+
+
 
 var currentlyHighlightedCells = []
-var unconfirmedShots = 0
-var startingDeployPoints = 20
-var minTargetPoints = 30
+#var startingDeployPoints = 20
+#var minTargetPoints = 10
 
+
+
+
+func calcTotalShots():
+	var total = 0
+	for s in shipsContained:
+		if not s.dead:
+			total += s.shotsAvailable
+	return total
+
+func calcTotalUnconfirmedMarkers():
+	var totalUnconfirmedMarkers = 0
+	for c in $'.'.get_children(): 
+		if c.isMarkedForShot:
+			totalUnconfirmedMarkers += 1
+	return totalUnconfirmedMarkers 
+
+func confirmedShotPlacements():
+	var confirmedShotCoords = []
+	for c in $'.'.get_children():
+		if c.isMarkedForShot:
+			c.confirmed = true
+			confirmedShotCoords.append(c.coords)
+	#print("board - confirmed shots: ", confirmedShotCoords)
+	return confirmedShotCoords
+
+
+func getUnconfirmedShotPlacements(markAsConfirmed=false):
+	var unconfirmedShotCoords = []
+	for c in $'.'.get_children(): 
+		if c.isMarkedForShot and not c.confirmed:
+			unconfirmedShotCoords.append(c.coords)
+			if markAsConfirmed:
+				c.confirmed = true
+	return unconfirmedShotCoords
 
 func _ready() -> void:
 	for c in $'.'.get_children(): # current cells are only there to be visibile in the editor
@@ -28,7 +69,7 @@ func _ready() -> void:
 	if friendly:
 		Globals.friendlyGrid = $'.'
 	else:
-		Globals.s_placeShotMarker.connect(_placeShotMarker)
+		#Globals.s_placeShotMarker.connect(_placeShotMarker)
 		Globals.enemyGrid = $'.'
 	Globals.s_resetShotMarkers.connect(_resetShotMarkers)
 	Globals.coordHoveredOn.connect(cellHoveredOn)
@@ -36,9 +77,22 @@ func _ready() -> void:
 	makeCells()
 
 
+func getShipDicts():
+	var dicts = []
+	for s in shipsContained:
+		dicts.append(s.simpleDict())
+	return dicts
 
 
-func setShipIntoGrid(ship:Node, startingCoord:Vector2):
+
+func addShipFromDict(shipDict, lockIntoPlace=false):
+	print("board grid - adding ship from dict: ", shipDict)
+	var newShipNode = shipScenes[str(shipDict.shipType)].instantiate()
+	setShipIntoGrid(newShipNode, shipDict.placedAt, lockIntoPlace)
+
+
+
+func setShipIntoGrid(ship:Node, startingCoord:Vector2, lockIntoPlace=false):
 	print("grid - setting ship")
 	if shipsContained.has(ship):
 		s_removeShipFromBoard.emit(ship.shipId)
@@ -49,10 +103,13 @@ func setShipIntoGrid(ship:Node, startingCoord:Vector2):
 			var yActual =  startingCoord.y + y
 			var shipTextureTile = ship.get_node("x"+str(x)+"y"+str(y)).texture
 			cellsRefs[xActual][yActual].setShipTexture(ship, shipTextureTile)
+			if lockIntoPlace:
+				cellsRefs[xActual][yActual].lockIntoPlace()
 	if not shipsContained.has(ship):
 		shipsContained.append(ship)
 		s_boardChanged.emit()
 	ship.placedAt = startingCoord
+	
 
 func lockShipsIntoPlace():
 	for c in $'.'.get_children():
@@ -83,19 +140,19 @@ func calcSpentDeployPoints():
 		total += s.deployCost
 	return total
 
-
-
-func addToUnconfirmedShots():
-	unconfirmedShots += 1
-
-func calcTotalShots():
-	return 5
-
-func calcTotalMarkers():
-	return unconfirmedShots
-
-func calcRemainingShots():
-	return calcTotalShots() - unconfirmedShots
+#
+#
+#func addToUnconfirmedShots():
+	#unconfirmedShots += 1
+#
+#func calcTotalShots():
+	#return 5
+#
+#func calcTotalMarkers():
+	#return unconfirmedShots
+#
+#func calcRemainingShots():
+	#return calcTotalShots() - unconfirmedShots
 
 
 
@@ -146,11 +203,26 @@ func makeCells():
 			newCell.position = Vector2(cellSize.x * x, cellSize.y * y)
 			#newCell.position += halfCellSize # add offset since the position is based on the center of then cell
 			$'.'.add_child(newCell)
-			
+			newCell.s_try_placeShotMarker.connect(_try_placeShotMarker) # let the signal bubble
 			cellsRefs[x].append(newCell)
 	$'.'.custom_minimum_size = gridSize * cellSize
 	#print("grid - cellRefs: ", cellsRefs)
 
+signal s_try_placeShotMarker(coords)
+
+func _try_placeShotMarker(coords):
+	if not Globals.currentBattlePhase == Globals.BattlePhases.BATTLE:
+		print("board - cant add shot, game is not battle phase")
+		return
+	#if calcRemainingShots() > 0 and not cellsRefs[coords.x][coords.y].isMarkedForShot:
+	if cellsRefs[coords.x][coords.y].canBeNewUncomfirmedMarker():
+		#unconfirmedShots += 1
+		s_try_placeShotMarker.emit(coords)
+		#print("grid - shots left: ", calcRemainingShots(), ", unconfirmed shots: ", unconfirmedShots)
+	#else:
+		#print("grid - no shots left")
+func placeShotMarker(coords):
+	cellsRefs[coords.x][coords.y].makeUncomfirmedMarker()
 
 
 
@@ -169,15 +241,5 @@ func disableHighlightSpot(coords):
 	cellsRefs[coords.x][coords.y].disableHighlight()
 
 func _resetShotMarkers():
-	unconfirmedShots = 0
-
-func _placeShotMarker(coords):
-	if not Globals.currentBattlePhase == Globals.BattlePhases.BATTLE:
-		return
-	if calcRemainingShots() > 0 and not cellsRefs[coords.x][coords.y].isMarkedForShot:
-		if cellsRefs[coords.x][coords.y].makeUncomfirmedMarker():
-			unconfirmedShots += 1
-			Globals.s_placedShotMarker.emit()
-		#print("grid - shots left: ", calcRemainingShots(), ", unconfirmed shots: ", unconfirmedShots)
-	#else:
-		#print("grid - no shots left")
+	#unconfirmedShots = 0
+	s_resetUncomfirmedMarkers.emit()

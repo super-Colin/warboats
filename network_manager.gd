@@ -1,6 +1,7 @@
 extends Node
 
 var maxClients:int = 2
+var otherPlayerId
 
 signal s_connectingAsClient
 signal s_connectedAsClient
@@ -31,7 +32,7 @@ func startClient(ip, port:int):
 
 
 func isAuthority():
-	return get_multiplayer_authority() != multiplayer.get_unique_id()
+	return get_multiplayer_authority() == multiplayer.get_unique_id()
 
 func id():
 	return multiplayer.get_unique_id()
@@ -39,6 +40,7 @@ func id():
 # Host
 func _peer_connected(id:int):
 	print("network [host] - Player %s connected" % id)
+	otherPlayerId = id
 
 func _peer_disconnected(id:int):
 	print("network [host] - Player %s disconnected" % id)

@@ -8,14 +8,14 @@ func _ready() -> void:
 	%HostServerButton.pressed.connect(_startHost)
 	%JoinServerButton.pressed.connect(_startClient)
 	Network.s_connectingAsClient.connect(showConnecting)
-	Network.s_connectedAsClient.connect(nextPhaseOfGame)
+	Network.s_connectedAsClient.connect(startDeployPhase)
 	
 	
 
 
 func _startHost():
 	Network.startHost(int(%Port.text))
-	nextPhaseOfGame()
+	startDeployPhase()
 
 
 func _startClient():
@@ -26,7 +26,8 @@ func _startClient():
 func showConnecting():
 	%Connecting.visible = true
 
-func nextPhaseOfGame():
+func startDeployPhase():
 	$'.'.visible = false
 	Globals.s_beginDeployPhase.emit()
-	print("multiplayer - starting next phase")
+	Globals.currentBattlePhase = Globals.BattlePhases.DEPLOY
+	print("multiplayer - starting deploy phase")
