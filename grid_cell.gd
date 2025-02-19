@@ -22,12 +22,10 @@ func _ready() -> void:
 		parent.s_removeShipFromBoard.connect(removeShipSprite)
 		parent.s_confirmShotMarkers.connect(_confirmShotMarker)
 		parent.s_resetUncomfirmedMarkers.connect(_resetShotMarkers)
-	#Globals.s_deployReady.connect(lockIntoPlace)
-	#Globals.s_resetShotMarkers.connect(_resetShotMarkers)
 	$'.'.mouse_entered.connect(startHoverState)
 	$'.'.mouse_exited.connect(endHoverState)
 
-# Set size, called by parent grid
+# Set size, called by parent grid when constructing
 func setSize(newSize:Vector2):
 	customSize = newSize
 	$'.'.custom_minimum_size = newSize

@@ -1,30 +1,26 @@
 extends Control
 
-var isHost = true
-#var bothPlayersReady = false # This will be used each cycle
-var playersReady = []
-
-var turnNumber = 1
-
-var shotsToPlayOut = {}
-var shotResultsForClient = [] # {"hit":false, "coords":Vector2.ZERO}, ...
-
-
-var unconfirmedShots = 0
-var confirmedShotCoords = []
+# Multiplayer role
+var isHost = true 
+var playersReady = [] 
+# Board / Round related
 var startingDeployPoints = 20
 var minTargetPoints = 10
-
-
-var shipPositions = {} # for passing the position of the clients ships
-
+# Passed through the network each turn
+var shotsToPlayOut = {}
+var shotResultsForClient = [] # {"hit":false, "coords":Vector2.ZERO}, ...
+var shipPositions = {} # for passing the position of enemy ships 
+# Local vars
+var turnNumber = 1
+var unconfirmedShots = 0
+var confirmedShotCoords = []
 var playerScores = {}
+var killedShips = []
 
-var killedShips=[]
 
 
-# Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	#Globals.boardRef = $'.'
 	Globals.s_beginDeployPhase.connect(_beginDeployPhase)
 	Globals.s_beginBattlePhase.connect(_beginBattlePhase)
 	
@@ -40,8 +36,7 @@ func _ready() -> void:
 	$BattleMenu.s_resetShotMarkers.connect(_resetUnconfirmedShots)
 	## Will establish needed vars once Network.otherPlayerId is defined
 	Network.s_otherPlayerConnected.connect(resetVarsWithOtherPlayer)
-	reestPlayerScores()
-	
+
 
 
 
@@ -55,13 +50,11 @@ func reestPlayerScores():
 	updateScoreLabels(playerScores)
 
 func resetForNextTurn():
+	turnNumber += 1
 	shotsToPlayOut = {}
 	shotResultsForClient = []
 
 
-
-
-# detrevnI
 # Detrevni
 
 
@@ -69,23 +62,34 @@ func resetForNextTurn():
 func addKill(ship, friendlyKilled):
 	if not Network.isAuthority() or killedShips.has(ship): 
 		return
-	print("board - ", str(Network.id()), " adding kill. For friendly: ", friendlyKilled)
-	print("board - playerScores:", playerScores)
 	if friendlyKilled:
 		playerScores[Network.otherPlayerId] += ship.targetPoints
 	else:
 		playerScores[Network.id()] += ship.targetPoints
 	killedShips.append(ship)
 	updateScoreLabels.rpc(playerScores)
+	if Network.isAuthority():
+		checkForWinConditions() 
 
+
+func checkForWinConditions():
+	if playerScores[Network.id()] > minTargetPoints:
+		declareWinner.rpc(Network.id(), playerScores)
+	elif playerScores[Network.otherPlayerId] > minTargetPoints:
+		declareWinner.rpc(Network.otherPlayerId, playerScores)
+
+@rpc("authority", "call_local", "reliable")
+func declareWinner(pId, scores):
+	print("board [", Network.id(), "] - ", pId, " wins")
+	%Grids/Friendly/Label.text = str(pId) + " Wins"
+	%Grids/Enemy/Label.text = str(pId) + " Wins"
 
 
 @rpc("authority", "call_local", "reliable")
 func updateScoreLabels(scores):
+	#print("board - ", str(Network.id()), ", updating score labels:", scores)
 	%Grids/Friendly/Label.text = "Score: " + str(scores[Network.id()]) + " / " + str(minTargetPoints)
 	%Grids/Enemy/Label.text = "Score: " + str(scores[Network.otherPlayerId]) + " / " + str(minTargetPoints)
-
-
 
 
 
@@ -96,12 +100,10 @@ func _confirmShotMarkers():
 	registerConfirmedShots.rpc(Network.id(), confirmedShotCoords)
 
 
-#@rpc("authority", "call_local", "reliable")
 func _resetUnconfirmedShots():
 	%Grids/Enemy/Grid.resetShotMarkers()
 	_boardUpdated()
 	#print("board - confirming shots: ", confirmedShotCoords)
-	#registerConfirmedShots.rpc(Network.id(), confirmedShotCoords)
 
 
 
@@ -130,10 +132,9 @@ func registerConfirmedShots(pId, shots):
 			handleConfirmedShots_host()
 
 
-
+## Adds/confirms markers on both sides
+## Called and initiated by host only,
 func handleConfirmedShots_host():
-	turnNumber += 1
-	#print("board - shotResultsForClient: ", shotResults)
 	for clientShot in shotsToPlayOut[Network.otherPlayerId]:
 		# create results of shots against host side, to pass to client
 		shotResultsForClient.append(%Grids/Friendly/Grid.placeShotMarker(clientShot, true))
@@ -141,13 +142,11 @@ func handleConfirmedShots_host():
 		%Grids/Enemy/Grid.confirmShot_bool(hostShot)
 	handleConfirmedShots_client.rpc(shotResultsForClient)
 	resetForNextTurn()
-	#%Grids/Friendly/Label.text = "Score: " + str(%Grids/Enemy) + " / " + str(minTargetPoints)
-	%Grids/Enemy/Label.text = "Deployed"
-
-#@rpc("any_peer", "call_remote", "reliable")
+## Adds/confirms markers on both sides
+## Only visually calcs hits on own board, forces hits/misses on empty enemy board
+## Called by client only, but initiated by host
 @rpc("authority", "call_remote", "reliable")
 func handleConfirmedShots_client(shotResults):
-	turnNumber += 1
 	#print("board - ", Network.id(),": shotResults: ", shotResults)
 	for s in shotsToPlayOut[1]: # 1 is always server authority 
 		%Grids/Friendly/Grid.placeShotMarker(s, true)
@@ -198,12 +197,13 @@ func _beginBattlePhase():
 func _boardUpdated():
 	$DeployMenu.updateDeployPoints(startingDeployPoints - %Grids/Friendly/Grid.calcSpentDeployPoints())
 	$DeployMenu.updateTargetPoints(%Grids/Friendly/Grid.calcTotalTargetPoints(), minTargetPoints)
-	if Globals.roundMinTargetPoints <= %Grids/Friendly/Grid.calcTotalTargetPoints():
+	if minTargetPoints <= %Grids/Friendly/Grid.calcTotalTargetPoints():
 		#print("board - deploy can be confirmed")
 		$DeployMenu.deployCanBeConfirmed()
 
 
 
 func _beginDeployPhase():
+	resetVarsWithOtherPlayer()
 	$DeployMenu.visible = true
 	$BattleMenu.visible = false

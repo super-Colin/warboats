@@ -87,14 +87,14 @@ func getShipDicts():
 
 
 func addShipFromDict(shipDict, lockIntoPlace=false):
-	print("board grid - adding ship from dict: ", shipDict)
+	#print("board grid - adding ship from dict: ", shipDict)
 	var newShipNode = shipScenes[str(shipDict.shipType)].instantiate()
 	setShipIntoGrid(newShipNode, shipDict.placedAt, lockIntoPlace)
 
 
 
 func setShipIntoGrid(ship:Node, startingCoord:Vector2, lockIntoPlace=false):
-	print("grid - setting ship")
+	#print("grid - setting ship")
 	if shipsContained.has(ship):
 		s_removeShipFromBoard.emit(ship.shipId)
 	s_clearBoardHighlights.emit()
@@ -120,7 +120,6 @@ func lockShipsIntoPlace():
 
 
 func removeShipFromBoard(ship:Node):
-	#Globals.s_refundDeployPoints.emit(ship.deployCost)
 	s_removeShipFromBoard.emit(ship.shipId)
 	Globals.s_boardChanged.emit()
 	# TODO make removable..?
@@ -130,14 +129,12 @@ func removeShipFromBoard(ship:Node):
 func calcTotalTargetPoints():
 	var total = 0
 	for s in shipsContained:
-		#total += shipsContained[s]
 		total += s.targetPoints
 	return total
 
 func calcSpentDeployPoints():
 	var total = 0
 	for s in shipsContained:
-		#total += shipsContained[s]
 		total += s.deployCost
 	return total
 
@@ -154,16 +151,13 @@ func hightlightShape(shape:Vector2, startingCoord:Vector2=Vector2.ZERO)->bool:
 	for x in shape.x:
 		var xActual =  startingCoord.x + x
 		if not cellsRefs.size() > xActual:
-			#print("ran out of space on the x axis")
 			return false
 		for y in shape.y:
 			var yActual =  startingCoord.y + y
 			if not cellsRefs[xActual].size() > yActual:
-				#print("ran out of space on the y axis")
 				return false
 			if not cellsRefs[xActual][yActual].isEmpty():
 				allGood = false
-				#cellsRefs[xActual][yActual].enableBadHighlight()
 			else:
 				cellsRefs[xActual][yActual].enableHighlight()
 				currentlyHighlightedCells.append(cellsRefs[xActual][yActual])
@@ -171,7 +165,6 @@ func hightlightShape(shape:Vector2, startingCoord:Vector2=Vector2.ZERO)->bool:
 
 
 func makeCells():
-	#var halfCellSize = cellSize / 2
 	for x in gridSize.x:
 		cellsRefs.append([])
 		for y in gridSize.y:
@@ -179,7 +172,6 @@ func makeCells():
 			newCell.coords = Vector2(x, y)
 			newCell.setSize(cellSize)
 			newCell.position = Vector2(cellSize.x * x, cellSize.y * y)
-			#newCell.position += halfCellSize # add offset since the position is based on the center of then cell
 			$'.'.add_child(newCell)
 			newCell.s_try_placeShotMarker.connect(_try_placeShotMarker) # let the signal bubble
 			newCell.s_shipWasHit.connect(_checkIfShipWasKilled)
@@ -195,7 +187,7 @@ func _checkIfShipWasKilled(ship):
 			if not cellsRefs[xActual][yActual].confirmed:
 				return false
 	markShipAsDead(ship)
-	print("grid - ship was killed: ", ship)
+	#print("grid - ship was killed: ", ship)
 	ship.dead = true
 	s_shipKilled.emit(ship, friendly)
 	return true
@@ -213,20 +205,15 @@ func markShipAsDead(ship):
 
 func _try_placeShotMarker(coords):
 	if not Globals.currentBattlePhase == Globals.BattlePhases.BATTLE:
-		print("board - cant add shot, game is not battle phase")
+		#print("board - cant add shot, game is not battle phase")
 		return
-	#if calcRemainingShots() > 0 and not cellsRefs[coords.x][coords.y].isMarkedForShot:
 	if cellsRefs[coords.x][coords.y].canBeNewUncomfirmedMarker():
-		#unconfirmedShots += 1
 		s_try_placeShotMarker.emit(coords)
-		#print("grid - shots left: ", calcRemainingShots(), ", unconfirmed shots: ", unconfirmedShots)
-	#else:
-		#print("grid - no shots left")
+
 
 func placeShotMarker(coords, confirmShot=false):
 	cellsRefs[coords.x][coords.y].makeUncomfirmedMarker()
 	if confirmShot:
-		#var wasHit = cellsRefs[coords.x][coords.y].confirmShot_dict()
 		return confirmShot_dict(coords)
 
 func confirmShot_bool(coords):
@@ -252,6 +239,7 @@ func cellHoveredOn(coords:Vector2):
 		return
 	if not friendly:
 		highlightSpot(coords)
+
 func cellHoveredOff(coords:Vector2):
 	disableHighlightSpot(coords)
 
