@@ -3,6 +3,9 @@ extends Node
 var maxClients:int = 2
 var otherPlayerId
 
+signal s_otherPlayerConnected
+signal s_otherPlayerDisconnected
+
 signal s_connectingAsClient
 signal s_connectedAsClient
 signal s_networkStatusChanged
@@ -47,19 +50,22 @@ func id():
 
 # Host
 func _peer_connected(id:int):
-	s_networkStatusChanged.emit()
 	print("network [host] - Player %s connected" % id)
 	otherPlayerId = id
+	s_networkStatusChanged.emit()
+	s_otherPlayerConnected.emit()
 
 func _peer_disconnected(id:int):
-	s_networkStatusChanged.emit()
 	print("network [host] - Player %s disconnected" % id)
+	s_networkStatusChanged.emit()
 
 # Client
 func _connected_to_server():
-	s_networkStatusChanged.emit()
+	otherPlayerId = 1 # since we're only dealing with 2 players at a time
 	print("network [client] - connected to server")
+	s_networkStatusChanged.emit()
 	s_connectedAsClient.emit()
+	s_otherPlayerConnected.emit()
 
 func _connection_failed():
 	s_networkStatusChanged.emit()

@@ -9,8 +9,8 @@ func _ready() -> void:
 	%ResetShots.pressed.connect(func():s_resetShotMarkers.emit())
 	%ConfirmShots.pressed.connect(func():s_confirmShotMarkers.emit())
 	#Globals.s_beginBattlePhase.connect(_beginBattlePhase)
-	Globals.s_placedShotMarker.connect(updateShotsLeft)
-	Globals.s_resetShotMarkers.connect(resetShotsLeft)
+	#Globals.s_placedShotMarker.connect(updateShotsLeft)
+	#Globals.s_resetShotMarkers.connect(resetShotsLeft)
 
 
 

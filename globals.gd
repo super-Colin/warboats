@@ -7,10 +7,10 @@ signal s_beginDeployPhase
 
 
 
-signal s_placeShotMarker(coords:Vector2)
-signal s_placedShotMarker
-signal s_confirmShotMarkers
-signal s_resetShotMarkers
+#signal s_placeShotMarker(coords:Vector2)
+#signal s_placedShotMarker
+#signal s_confirmShotMarkers
+#signal s_resetShotMarkers
 
 signal coordHoveredOn(coord:Vector2)
 signal coordHoveredOff(coord:Vector2)

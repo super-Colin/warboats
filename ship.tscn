@@ -20,7 +20,7 @@ script = ExtResource("1_u0ts2")
 shipShape = Vector2(2, 3)
 targetPoints = 13
 deployCost = 7
-shotsAvailable = 3
+shotsAvailable = 6
 
 [node name="x0y0" parent="." instance=ExtResource("3_7aa8i")]
 layout_mode = 0

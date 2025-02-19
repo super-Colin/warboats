@@ -24,7 +24,7 @@ signal s_resetUncomfirmedMarkers
 signal s_try_placeShotMarker(coords)
 signal s_confirmShotMarkers
 
-signal s_shipKilled(ship)
+signal s_shipKilled(ship, freiendlyOrNot)
 
 var currentlyHighlightedCells = []
 #var startingDeployPoints = 20
@@ -72,9 +72,7 @@ func _ready() -> void:
 	if friendly:
 		Globals.friendlyGrid = $'.'
 	else:
-		#Globals.s_placeShotMarker.connect(_placeShotMarker)
 		Globals.enemyGrid = $'.'
-	Globals.s_resetShotMarkers.connect(_resetShotMarkers)
 	Globals.coordHoveredOn.connect(cellHoveredOn)
 	Globals.coordHoveredOff.connect(cellHoveredOff)
 	makeCells()
@@ -199,7 +197,7 @@ func _checkIfShipWasKilled(ship):
 	markShipAsDead(ship)
 	print("grid - ship was killed: ", ship)
 	ship.dead = true
-	s_shipKilled.emit(ship)
+	s_shipKilled.emit(ship, friendly)
 	return true
 
 func markShipAsDead(ship):
@@ -207,7 +205,7 @@ func markShipAsDead(ship):
 		var xActual =  ship.placedAt.x + x
 		for y in ship.shipShape.y:
 			var yActual =  ship.placedAt.y + y
-			cellsRefs[xActual][yActual].modulate = "535353"
+			cellsRefs[xActual][yActual].self_modulate = "535353"
 
 
 
@@ -263,5 +261,5 @@ func highlightSpot(coords):
 func disableHighlightSpot(coords):
 	cellsRefs[coords.x][coords.y].disableHighlight()
 
-func _resetShotMarkers():
+func resetShotMarkers():
 	s_resetUncomfirmedMarkers.emit()

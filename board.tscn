@@ -15,44 +15,55 @@ grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("1_hi53t")
 
-[node name="Grids" type="HBoxContainer" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -382.0
+offset_left = -399.0
 offset_top = -203.5
-offset_right = 382.0
+offset_right = 399.0
 offset_bottom = 203.5
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Friendly" type="VBoxContainer" parent="Grids"]
+[node name="Announcement" type="Label" parent="VBoxContainer"]
+visible = false
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "Something"
+horizontal_alignment = 1
+
+[node name="Grids" type="HBoxContainer" parent="VBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Grids/Friendly"]
+[node name="Friendly" type="VBoxContainer" parent="VBoxContainer/Grids"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/Grids/Friendly"]
 layout_mode = 2
 text = "Not Ready"
 horizontal_alignment = 1
 
-[node name="Grid" parent="Grids/Friendly" instance=ExtResource("1_rgxrr")]
+[node name="Grid" parent="VBoxContainer/Grids/Friendly" instance=ExtResource("1_rgxrr")]
 layout_mode = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="Grids"]
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Grids"]
 custom_minimum_size = Vector2(30, 0)
 layout_mode = 2
 
-[node name="Enemy" type="VBoxContainer" parent="Grids"]
+[node name="Enemy" type="VBoxContainer" parent="VBoxContainer/Grids"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Grids/Enemy"]
+[node name="Label" type="Label" parent="VBoxContainer/Grids/Enemy"]
 layout_mode = 2
 text = "Not Ready"
 horizontal_alignment = 1
 
-[node name="Grid" parent="Grids/Enemy" instance=ExtResource("1_rgxrr")]
+[node name="Grid" parent="VBoxContainer/Grids/Enemy" instance=ExtResource("1_rgxrr")]
 layout_mode = 2
 friendly = false
 
