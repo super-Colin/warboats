@@ -1,7 +1,6 @@
 extends Control
 
-# Multiplayer role
-var isHost = true 
+# Multiplayer
 var playersReady = [] 
 # Board / Round related
 var startingDeployPoints = 20
@@ -35,27 +34,31 @@ func _ready() -> void:
 	$BattleMenu.s_confirmShotMarkers.connect(_confirmShotMarkers)
 	$BattleMenu.s_resetShotMarkers.connect(_resetUnconfirmedShots)
 	## Will establish needed vars once Network.otherPlayerId is defined
-	Network.s_otherPlayerConnected.connect(resetVarsWithOtherPlayer)
+	Network.s_otherPlayerConnected.connect(resetNetworkVars)
 
 
 
 
-func resetVarsWithOtherPlayer():
-	print("board - ", str(Network.id()), " reseting player vars with other player id: ", Network.otherPlayerId)
-	reestPlayerScores()
+func resetNetworkVars():
+	print("board - ", Network.role, " - reseting player vars with other player id: ", Network.otherPlayerId)
+	Network.setAllPlayers("score", 0)
+	Network.setAllPlayers("ready", false)
+	#if Globals.currentBattlePhase == Globals.BattlePhases.BATTLE:
+		#sendScores()
+	#reestPlayerScores()
+	#updateScoreLabels()
+	
 
-func reestPlayerScores():
-	playerScores[Network.id()] = 0
-	playerScores[Network.otherPlayerId] = 0
-	updateScoreLabels(playerScores)
+#func reestPlayerScores():
+	#playerScores[Network.id()] = 0
+	#playerScores[Network.otherPlayerId] = 0
+	#updateScoreLabels(playerScores)
 
 func resetForNextTurn():
 	turnNumber += 1
 	shotsToPlayOut = {}
 	shotResultsForClient = []
 
-
-# Detrevni
 
 
 @rpc("authority", "call_local", "reliable")
@@ -69,26 +72,49 @@ func addKill(ship, friendlyKilled):
 	killedShips.append(ship)
 	updateScoreLabels.rpc(playerScores)
 	if Network.isAuthority():
-		checkForWinConditions() 
+		if not checkForWinConditions():
+			checkForStalemateConditions()
 
 
 func checkForWinConditions():
 	if playerScores[Network.id()] > minTargetPoints:
 		declareWinner.rpc(Network.id(), playerScores)
+		return true
 	elif playerScores[Network.otherPlayerId] > minTargetPoints:
 		declareWinner.rpc(Network.otherPlayerId, playerScores)
+		return true
+	return false
+
+func checkForStalemateConditions():
+	if %Grids/Friendly/Grid.calcTotalShots() == 0 and %Grids/Enemy/Grid.calcTotalShots() == 0:
+		declareStalemate.rpc()
+
+
+@rpc("authority", "call_local", "reliable")
+func declareStalemate():
+	print("board [", Network.role, "] - Stalemate")
+	%Grids/Friendly/Label.text = "Stalemate"
+	%Grids/Enemy/Label.text = "Stalemate"
+	Globals.currentBattlePhase = Globals.BattlePhases.BATTLE_OVER
 
 @rpc("authority", "call_local", "reliable")
 func declareWinner(pId, scores):
-	print("board [", Network.id(), "] - ", pId, " wins")
+	print("board [", Network.role, "] - ", pId, " wins")
 	%Grids/Friendly/Label.text = str(pId) + " Wins"
 	%Grids/Enemy/Label.text = str(pId) + " Wins"
 	Globals.currentBattlePhase = Globals.BattlePhases.BATTLE_OVER
 
 
+func sendScores():
+	if not Network.isAuthority():
+		return
+	var scores = Network.getAllPlayers("score")
+	updateScoreLabels.rpc(scores)
+
 @rpc("authority", "call_local", "reliable")
 func updateScoreLabels(scores):
 	#print("board - ", str(Network.id()), ", updating score labels:", scores)
+	
 	%Grids/Friendly/Label.text = "Score: " + str(scores[Network.id()]) + " / " + str(minTargetPoints)
 	%Grids/Enemy/Label.text = "Score: " + str(scores[Network.otherPlayerId]) + " / " + str(minTargetPoints)
 
@@ -143,12 +169,13 @@ func handleConfirmedShots_host():
 		%Grids/Enemy/Grid.confirmShot_bool(hostShot)
 	handleConfirmedShots_client.rpc(shotResultsForClient)
 	resetForNextTurn()
+
 ## Adds/confirms markers on both sides
 ## Only visually calcs hits on own board, forces hits/misses on empty enemy board
 ## Called by client only, but initiated by host
 @rpc("authority", "call_remote", "reliable")
 func handleConfirmedShots_client(shotResults):
-	#print("board - ", Network.id(),": shotResults: ", shotResults)
+	#print("board - ", Network.role,": shotResults: ", shotResults)
 	for s in shotsToPlayOut[1]: # 1 is always server authority 
 		%Grids/Friendly/Grid.placeShotMarker(s, true)
 	for s in shotResults: # 1 is always server authority 
@@ -158,25 +185,29 @@ func handleConfirmedShots_client(shotResults):
 
 
 
-func deployConfirmed():
-	updateReadyStateLabels.rpc(Network.id(), %Grids/Friendly/Grid.getShipDicts())
-	#if not Network.isAuthority():
-	#else:
-
 @rpc("any_peer", "call_local", "reliable")
 func updateReadyStateLabels(pId, gridShipsContainedDicts):
-	#print("board - ", Network.id()," updating ready label state:  : ", gridShipsContainedDicts)
+	#print("board - ", Network.role," updating ready label state:  : ", gridShipsContainedDicts)
 	if pId == Network.id():
 		%Grids/Friendly/Label.text = "Deployed"
 	else:
 		%Grids/Enemy/Label.text = "Deployed"
-	playersReady.append(pId)
-	shipPositions[pId] = gridShipsContainedDicts
+	if not playersReady.has(pId):
+		playersReady.append(pId)
+		shipPositions[pId] = gridShipsContainedDicts
 	if Network.isAuthority() and playersReady.size() == 2:
 		#print("board - both players ready")
 		#shipPositions[Network.otherPlayerId]
 		addShipsToEnemyBoard(shipPositions[Network.otherPlayerId])
 		_beginBattlePhase.rpc()
+
+
+func deployConfirmed():
+	updateReadyStateLabels.rpc(Network.id(), %Grids/Friendly/Grid.getShipDicts())
+	#if not Network.isAuthority():
+	#else:
+
+
 
 
 
@@ -205,6 +236,7 @@ func _boardUpdated():
 
 
 func _beginDeployPhase():
-	resetVarsWithOtherPlayer()
 	$DeployMenu.visible = true
 	$BattleMenu.visible = false
+	if Network.isAuthority():
+		resetNetworkVars()

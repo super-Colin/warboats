@@ -17,6 +17,6 @@ func updatePhaseLabel():
 	%GamePhase.text = "Game phase: "+str(Globals.BattlePhases.keys()[Globals.currentBattlePhase])
 
 func updateServerAuthLabel():
-	%ServerAuthority.text = "Is Server Authority: " + Network.isAuthorityAsString() 
+	%ServerAuthority.text = "Server Role: " + Network.role 
 func updateServerIdLabel():
 	%ServerId.text = "Server Id: " + str(Network.id())

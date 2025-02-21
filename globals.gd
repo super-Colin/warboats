@@ -9,6 +9,7 @@ signal s_boardChanged
 signal coordHoveredOn(coord:Vector2)
 signal coordHoveredOff(coord:Vector2)
 
+signal s_clearBoardHighlights # ships use this when a drag fails
 
 var friendlyGrid:Node
 var enemyGrid:Node

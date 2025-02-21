@@ -1,427 +1,427 @@
 [gd_scene load_steps=3 format=3 uid="uid://c8o6dr3fknptg"]
 
-[ext_resource type="Script" path="res://board_grid.gd" id="1_tpt1s"]
-[ext_resource type="PackedScene" uid="uid://dcei64kwnh4vv" path="res://grid_cell.tscn" id="2_48pd0"]
+[ext_resource type="Script" path="res://grid.gd" id="1_8mkwp"]
+[ext_resource type="PackedScene" uid="uid://dcei64kwnh4vv" path="res://grid_cell.tscn" id="2_6a44c"]
 
 [node name="BoardGrid" type="Control"]
 custom_minimum_size = Vector2(380, 380)
 layout_mode = 3
 anchors_preset = 0
-script = ExtResource("1_tpt1s")
+script = ExtResource("1_8mkwp")
 
-[node name="GridCell" parent="." instance=ExtResource("2_48pd0")]
+[node name="GridCell" parent="." instance=ExtResource("2_6a44c")]
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
 [node name="Cells" type="Node2D" parent="."]
 
-[node name="GridCell2" parent="Cells" instance=ExtResource("2_48pd0")]
+[node name="GridCell2" parent="Cells" instance=ExtResource("2_6a44c")]
 offset_left = 42.0
 offset_right = 82.0
 offset_bottom = 40.0
 
-[node name="GridCell3" parent="Cells" instance=ExtResource("2_48pd0")]
+[node name="GridCell3" parent="Cells" instance=ExtResource("2_6a44c")]
 offset_left = 85.0
 offset_right = 125.0
 offset_bottom = 40.0
 
-[node name="GridCell4" parent="Cells" instance=ExtResource("2_48pd0")]
+[node name="GridCell4" parent="Cells" instance=ExtResource("2_6a44c")]
 offset_left = 127.0
 offset_right = 167.0
 offset_bottom = 40.0
 
-[node name="GridCell5" parent="Cells" instance=ExtResource("2_48pd0")]
+[node name="GridCell5" parent="Cells" instance=ExtResource("2_6a44c")]
 offset_left = 171.0
 offset_right = 211.0
 offset_bottom = 40.0
 
-[node name="GridCell6" parent="Cells" instance=ExtResource("2_48pd0")]
+[node name="GridCell6" parent="Cells" instance=ExtResource("2_6a44c")]
 offset_left = 213.0
 offset_right = 253.0
 offset_bottom = 40.0
 
-[node name="GridCell7" parent="Cells" instance=ExtResource("2_48pd0")]
+[node name="GridCell7" parent="Cells" instance=ExtResource("2_6a44c")]
 offset_left = 256.0
 offset_right = 296.0
 offset_bottom = 40.0
 
-[node name="GridCell8" parent="Cells" instance=ExtResource("2_48pd0")]
+[node name="GridCell8" parent="Cells" instance=ExtResource("2_6a44c")]
 offset_left = 298.0
 offset_right = 338.0
 offset_bottom = 40.0
 
-[node name="GridCell9" parent="Cells" instance=ExtResource("2_48pd0")]
+[node name="GridCell9" parent="Cells" instance=ExtResource("2_6a44c")]
 offset_top = 45.0
 offset_right = 40.0
 offset_bottom = 85.0
 
-[node name="GridCell10" parent="Cells" instance=ExtResource("2_48pd0")]
+[node name="GridCell10" parent="Cells" instance=ExtResource("2_6a44c")]
 offset_left = 42.0
 offset_top = 45.0
 offset_right = 82.0
 offset_bottom = 85.0
 
-[node name="GridCell11" parent="Cells" instance=ExtResource("2_48pd0")]
+[node name="GridCell11" parent="Cells" instance=ExtResource("2_6a44c")]
 offset_left = 85.0
 offset_top = 45.0
 offset_right = 125.0
 offset_bottom = 85.0
 
-[node name="GridCell12" parent="Cells" instance=ExtResource("2_48pd0")]
+[node name="GridCell12" parent="Cells" instance=ExtResource("2_6a44c")]
 offset_left = 127.0
 offset_top = 45.0
 offset_right = 167.0
 offset_bottom = 85.0
 
-[node name="GridCell13" parent="Cells" instance=ExtResource("2_48pd0")]
+[node name="GridCell13" parent="Cells" instance=ExtResource("2_6a44c")]
 offset_left = 171.0
 offset_top = 45.0
 offset_right = 211.0
 offset_bottom = 85.0
 
-[node name="GridCell14" parent="Cells" instance=ExtResource("2_48pd0")]
+[node name="GridCell14" parent="Cells" instance=ExtResource("2_6a44c")]
 offset_left = 213.0
 offset_top = 45.0
 offset_right = 253.0
 offset_bottom = 85.0
 
-[node name="GridCell15" parent="Cells" instance=ExtResource("2_48pd0")]
+[node name="GridCell15" parent="Cells" instance=ExtResource("2_6a44c")]
 offset_left = 256.0
 offset_top = 45.0
 offset_right = 296.0
 offset_bottom = 85.0
 
-[node name="GridCell16" parent="Cells" instance=ExtResource("2_48pd0")]
+[node name="GridCell16" parent="Cells" instance=ExtResource("2_6a44c")]
 offset_left = 298.0
 offset_top = 45.0
 offset_right = 338.0
 offset_bottom = 85.0
 
-[node name="GridCell17" parent="Cells" instance=ExtResource("2_48pd0")]
+[node name="GridCell17" parent="Cells" instance=ExtResource("2_6a44c")]
 offset_top = 90.0
 offset_right = 40.0
 offset_bottom = 130.0
 
-[node name="GridCell18" parent="Cells" instance=ExtResource("2_48pd0")]
+[node name="GridCell18" parent="Cells" instance=ExtResource("2_6a44c")]
 offset_left = 42.0
 offset_top = 90.0
 offset_right = 82.0
 offset_bottom = 130.0
 
-[node name="GridCell19" parent="Cells" instance=ExtResource("2_48pd0")]
+[node name="GridCell19" parent="Cells" instance=ExtResource("2_6a44c")]
 offset_left = 85.0
 offset_top = 90.0
 offset_right = 125.0
 offset_bottom = 130.0
 
-[node name="GridCell20" parent="Cells" instance=ExtResource("2_48pd0")]
+[node name="GridCell20" parent="Cells" instance=ExtResource("2_6a44c")]
 offset_left = 127.0
 offset_top = 90.0
 offset_right = 167.0
 offset_bottom = 130.0
 
-[node name="GridCell21" parent="Cells" instance=ExtResource("2_48pd0")]
+[node name="GridCell21" parent="Cells" instance=ExtResource("2_6a44c")]
 offset_left = 171.0
 offset_top = 90.0
 offset_right = 211.0
 offset_bottom = 130.0
 
-[node name="GridCell22" parent="Cells" instance=ExtResource("2_48pd0")]
+[node name="GridCell22" parent="Cells" instance=ExtResource("2_6a44c")]
 offset_left = 213.0
 offset_top = 90.0
 offset_right = 253.0
 offset_bottom = 130.0
 
-[node name="GridCell23" parent="Cells" instance=ExtResource("2_48pd0")]
+[node name="GridCell23" parent="Cells" instance=ExtResource("2_6a44c")]
 offset_left = 256.0
 offset_top = 90.0
 offset_right = 296.0
 offset_bottom = 130.0
 
-[node name="GridCell24" parent="Cells" instance=ExtResource("2_48pd0")]
+[node name="GridCell24" parent="Cells" instance=ExtResource("2_6a44c")]
 offset_left = 298.0
 offset_top = 90.0
 offset_right = 338.0
 offset_bottom = 130.0
 
-[node name="GridCell25" parent="Cells" instance=ExtResource("2_48pd0")]
+[node name="GridCell25" parent="Cells" instance=ExtResource("2_6a44c")]
 offset_top = 135.0
 offset_right = 40.0
 offset_bottom = 175.0
 
-[node name="GridCell26" parent="Cells" instance=ExtResource("2_48pd0")]
+[node name="GridCell26" parent="Cells" instance=ExtResource("2_6a44c")]
 offset_left = 42.0
 offset_top = 135.0
 offset_right = 82.0
 offset_bottom = 175.0
 
-[node name="GridCell27" parent="Cells" instance=ExtResource("2_48pd0")]
+[node name="GridCell27" parent="Cells" instance=ExtResource("2_6a44c")]
 offset_left = 85.0
 offset_top = 135.0
 offset_right = 125.0
 offset_bottom = 175.0
 
-[node name="GridCell28" parent="Cells" instance=ExtResource("2_48pd0")]
+[node name="GridCell28" parent="Cells" instance=ExtResource("2_6a44c")]
 offset_left = 127.0
 offset_top = 135.0
 offset_right = 167.0
 offset_bottom = 175.0
 
-[node name="GridCell29" parent="Cells" instance=ExtResource("2_48pd0")]
+[node name="GridCell29" parent="Cells" instance=ExtResource("2_6a44c")]
 offset_left = 171.0
 offset_top = 135.0
 offset_right = 211.0
 offset_bottom = 175.0
 
-[node name="GridCell30" parent="Cells" instance=ExtResource("2_48pd0")]
+[node name="GridCell30" parent="Cells" instance=ExtResource("2_6a44c")]
 offset_left = 213.0
 offset_top = 135.0
 offset_right = 253.0
 offset_bottom = 175.0
 
-[node name="GridCell31" parent="Cells" instance=ExtResource("2_48pd0")]
+[node name="GridCell31" parent="Cells" instance=ExtResource("2_6a44c")]
 offset_left = 256.0
 offset_top = 135.0
 offset_right = 296.0
 offset_bottom = 175.0
 
-[node name="GridCell32" parent="Cells" instance=ExtResource("2_48pd0")]
+[node name="GridCell32" parent="Cells" instance=ExtResource("2_6a44c")]
 offset_left = 298.0
 offset_top = 135.0
 offset_right = 338.0
 offset_bottom = 175.0
 
-[node name="GridCell33" parent="Cells" instance=ExtResource("2_48pd0")]
+[node name="GridCell33" parent="Cells" instance=ExtResource("2_6a44c")]
 offset_top = 182.0
 offset_right = 40.0
 offset_bottom = 222.0
 
-[node name="GridCell34" parent="Cells" instance=ExtResource("2_48pd0")]
+[node name="GridCell34" parent="Cells" instance=ExtResource("2_6a44c")]
 offset_left = 42.0
 offset_top = 182.0
 offset_right = 82.0
 offset_bottom = 222.0
 
-[node name="GridCell35" parent="Cells" instance=ExtResource("2_48pd0")]
+[node name="GridCell35" parent="Cells" instance=ExtResource("2_6a44c")]
 offset_left = 85.0
 offset_top = 182.0
 offset_right = 125.0
 offset_bottom = 222.0
 
-[node name="GridCell36" parent="Cells" instance=ExtResource("2_48pd0")]
+[node name="GridCell36" parent="Cells" instance=ExtResource("2_6a44c")]
 offset_left = 127.0
 offset_top = 182.0
 offset_right = 167.0
 offset_bottom = 222.0
 
-[node name="GridCell37" parent="Cells" instance=ExtResource("2_48pd0")]
+[node name="GridCell37" parent="Cells" instance=ExtResource("2_6a44c")]
 offset_left = 171.0
 offset_top = 182.0
 offset_right = 211.0
 offset_bottom = 222.0
 
-[node name="GridCell38" parent="Cells" instance=ExtResource("2_48pd0")]
+[node name="GridCell38" parent="Cells" instance=ExtResource("2_6a44c")]
 offset_left = 213.0
 offset_top = 182.0
 offset_right = 253.0
 offset_bottom = 222.0
 
-[node name="GridCell39" parent="Cells" instance=ExtResource("2_48pd0")]
+[node name="GridCell39" parent="Cells" instance=ExtResource("2_6a44c")]
 offset_left = 256.0
 offset_top = 182.0
 offset_right = 296.0
 offset_bottom = 222.0
 
-[node name="GridCell40" parent="Cells" instance=ExtResource("2_48pd0")]
+[node name="GridCell40" parent="Cells" instance=ExtResource("2_6a44c")]
 offset_left = 298.0
 offset_top = 182.0
 offset_right = 338.0
 offset_bottom = 222.0
 
-[node name="GridCell41" parent="Cells" instance=ExtResource("2_48pd0")]
+[node name="GridCell41" parent="Cells" instance=ExtResource("2_6a44c")]
 offset_top = 229.0
 offset_right = 40.0
 offset_bottom = 269.0
 
-[node name="GridCell42" parent="Cells" instance=ExtResource("2_48pd0")]
+[node name="GridCell42" parent="Cells" instance=ExtResource("2_6a44c")]
 offset_left = 42.0
 offset_top = 229.0
 offset_right = 82.0
 offset_bottom = 269.0
 
-[node name="GridCell43" parent="Cells" instance=ExtResource("2_48pd0")]
+[node name="GridCell43" parent="Cells" instance=ExtResource("2_6a44c")]
 offset_left = 85.0
 offset_top = 229.0
 offset_right = 125.0
 offset_bottom = 269.0
 
-[node name="GridCell44" parent="Cells" instance=ExtResource("2_48pd0")]
+[node name="GridCell44" parent="Cells" instance=ExtResource("2_6a44c")]
 offset_left = 127.0
 offset_top = 229.0
 offset_right = 167.0
 offset_bottom = 269.0
 
-[node name="GridCell45" parent="Cells" instance=ExtResource("2_48pd0")]
+[node name="GridCell45" parent="Cells" instance=ExtResource("2_6a44c")]
 offset_left = 171.0
 offset_top = 229.0
 offset_right = 211.0
 offset_bottom = 269.0
 
-[node name="GridCell46" parent="Cells" instance=ExtResource("2_48pd0")]
+[node name="GridCell46" parent="Cells" instance=ExtResource("2_6a44c")]
 offset_left = 213.0
 offset_top = 229.0
 offset_right = 253.0
 offset_bottom = 269.0
 
-[node name="GridCell47" parent="Cells" instance=ExtResource("2_48pd0")]
+[node name="GridCell47" parent="Cells" instance=ExtResource("2_6a44c")]
 offset_left = 256.0
 offset_top = 229.0
 offset_right = 296.0
 offset_bottom = 269.0
 
-[node name="GridCell48" parent="Cells" instance=ExtResource("2_48pd0")]
+[node name="GridCell48" parent="Cells" instance=ExtResource("2_6a44c")]
 offset_left = 298.0
 offset_top = 229.0
 offset_right = 338.0
 offset_bottom = 269.0
 
-[node name="GridCell49" parent="Cells" instance=ExtResource("2_48pd0")]
+[node name="GridCell49" parent="Cells" instance=ExtResource("2_6a44c")]
 offset_top = 276.0
 offset_right = 40.0
 offset_bottom = 316.0
 
-[node name="GridCell50" parent="Cells" instance=ExtResource("2_48pd0")]
+[node name="GridCell50" parent="Cells" instance=ExtResource("2_6a44c")]
 offset_left = 42.0
 offset_top = 276.0
 offset_right = 82.0
 offset_bottom = 316.0
 
-[node name="GridCell51" parent="Cells" instance=ExtResource("2_48pd0")]
+[node name="GridCell51" parent="Cells" instance=ExtResource("2_6a44c")]
 offset_left = 85.0
 offset_top = 276.0
 offset_right = 125.0
 offset_bottom = 316.0
 
-[node name="GridCell52" parent="Cells" instance=ExtResource("2_48pd0")]
+[node name="GridCell52" parent="Cells" instance=ExtResource("2_6a44c")]
 offset_left = 127.0
 offset_top = 276.0
 offset_right = 167.0
 offset_bottom = 316.0
 
-[node name="GridCell53" parent="Cells" instance=ExtResource("2_48pd0")]
+[node name="GridCell53" parent="Cells" instance=ExtResource("2_6a44c")]
 offset_left = 171.0
 offset_top = 276.0
 offset_right = 211.0
 offset_bottom = 316.0
 
-[node name="GridCell54" parent="Cells" instance=ExtResource("2_48pd0")]
+[node name="GridCell54" parent="Cells" instance=ExtResource("2_6a44c")]
 offset_left = 213.0
 offset_top = 276.0
 offset_right = 253.0
 offset_bottom = 316.0
 
-[node name="GridCell55" parent="Cells" instance=ExtResource("2_48pd0")]
+[node name="GridCell55" parent="Cells" instance=ExtResource("2_6a44c")]
 offset_left = 256.0
 offset_top = 276.0
 offset_right = 296.0
 offset_bottom = 316.0
 
-[node name="GridCell56" parent="Cells" instance=ExtResource("2_48pd0")]
+[node name="GridCell56" parent="Cells" instance=ExtResource("2_6a44c")]
 offset_left = 298.0
 offset_top = 276.0
 offset_right = 338.0
 offset_bottom = 316.0
 
-[node name="GridCell57" parent="Cells" instance=ExtResource("2_48pd0")]
+[node name="GridCell57" parent="Cells" instance=ExtResource("2_6a44c")]
 offset_left = 343.0
 offset_right = 383.0
 offset_bottom = 40.0
 
-[node name="GridCell58" parent="Cells" instance=ExtResource("2_48pd0")]
+[node name="GridCell58" parent="Cells" instance=ExtResource("2_6a44c")]
 offset_left = 343.0
 offset_top = 45.0
 offset_right = 383.0
 offset_bottom = 85.0
 
-[node name="GridCell59" parent="Cells" instance=ExtResource("2_48pd0")]
+[node name="GridCell59" parent="Cells" instance=ExtResource("2_6a44c")]
 offset_left = 343.0
 offset_top = 90.0
 offset_right = 383.0
 offset_bottom = 130.0
 
-[node name="GridCell60" parent="Cells" instance=ExtResource("2_48pd0")]
+[node name="GridCell60" parent="Cells" instance=ExtResource("2_6a44c")]
 offset_left = 343.0
 offset_top = 135.0
 offset_right = 383.0
 offset_bottom = 175.0
 
-[node name="GridCell61" parent="Cells" instance=ExtResource("2_48pd0")]
+[node name="GridCell61" parent="Cells" instance=ExtResource("2_6a44c")]
 offset_left = 343.0
 offset_top = 182.0
 offset_right = 383.0
 offset_bottom = 222.0
 
-[node name="GridCell62" parent="Cells" instance=ExtResource("2_48pd0")]
+[node name="GridCell62" parent="Cells" instance=ExtResource("2_6a44c")]
 offset_left = 343.0
 offset_top = 229.0
 offset_right = 383.0
 offset_bottom = 269.0
 
-[node name="GridCell63" parent="Cells" instance=ExtResource("2_48pd0")]
+[node name="GridCell63" parent="Cells" instance=ExtResource("2_6a44c")]
 offset_left = 343.0
 offset_top = 276.0
 offset_right = 383.0
 offset_bottom = 316.0
 
-[node name="GridCell64" parent="Cells" instance=ExtResource("2_48pd0")]
+[node name="GridCell64" parent="Cells" instance=ExtResource("2_6a44c")]
 offset_top = 323.0
 offset_right = 40.0
 offset_bottom = 363.0
 
-[node name="GridCell65" parent="Cells" instance=ExtResource("2_48pd0")]
+[node name="GridCell65" parent="Cells" instance=ExtResource("2_6a44c")]
 offset_left = 42.0
 offset_top = 323.0
 offset_right = 82.0
 offset_bottom = 363.0
 
-[node name="GridCell66" parent="Cells" instance=ExtResource("2_48pd0")]
+[node name="GridCell66" parent="Cells" instance=ExtResource("2_6a44c")]
 offset_left = 85.0
 offset_top = 323.0
 offset_right = 125.0
 offset_bottom = 363.0
 
-[node name="GridCell67" parent="Cells" instance=ExtResource("2_48pd0")]
+[node name="GridCell67" parent="Cells" instance=ExtResource("2_6a44c")]
 offset_left = 127.0
 offset_top = 323.0
 offset_right = 167.0
 offset_bottom = 363.0
 
-[node name="GridCell68" parent="Cells" instance=ExtResource("2_48pd0")]
+[node name="GridCell68" parent="Cells" instance=ExtResource("2_6a44c")]
 offset_left = 171.0
 offset_top = 323.0
 offset_right = 211.0
 offset_bottom = 363.0
 
-[node name="GridCell69" parent="Cells" instance=ExtResource("2_48pd0")]
+[node name="GridCell69" parent="Cells" instance=ExtResource("2_6a44c")]
 offset_left = 213.0
 offset_top = 323.0
 offset_right = 253.0
 offset_bottom = 363.0
 
-[node name="GridCell70" parent="Cells" instance=ExtResource("2_48pd0")]
+[node name="GridCell70" parent="Cells" instance=ExtResource("2_6a44c")]
 offset_left = 256.0
 offset_top = 323.0
 offset_right = 296.0
 offset_bottom = 363.0
 
-[node name="GridCell71" parent="Cells" instance=ExtResource("2_48pd0")]
+[node name="GridCell71" parent="Cells" instance=ExtResource("2_6a44c")]
 offset_left = 298.0
 offset_top = 323.0
 offset_right = 338.0
 offset_bottom = 363.0
 
-[node name="GridCell72" parent="Cells" instance=ExtResource("2_48pd0")]
+[node name="GridCell72" parent="Cells" instance=ExtResource("2_6a44c")]
 offset_left = 343.0
 offset_top = 323.0
 offset_right = 383.0

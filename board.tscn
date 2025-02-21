@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://board.gd" id="1_hi53t"]
 [ext_resource type="PackedScene" uid="uid://dbkjmy0ilupqk" path="res://UI/deploy_menu.tscn" id="1_of124"]
-[ext_resource type="PackedScene" uid="uid://c8o6dr3fknptg" path="res://board_grid.tscn" id="1_rgxrr"]
+[ext_resource type="PackedScene" uid="uid://c8o6dr3fknptg" path="res://grid.tscn" id="1_rgxrr"]
 [ext_resource type="PackedScene" uid="uid://d03hcdnfcf6og" path="res://UI/battle_menu.tscn" id="3_n8rou"]
 
 [node name="Board" type="Control"]
