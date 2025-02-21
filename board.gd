@@ -83,6 +83,7 @@ func declareWinner(pId, scores):
 	print("board [", Network.id(), "] - ", pId, " wins")
 	%Grids/Friendly/Label.text = str(pId) + " Wins"
 	%Grids/Enemy/Label.text = str(pId) + " Wins"
+	Globals.currentBattlePhase = Globals.BattlePhases.BATTLE_OVER
 
 
 @rpc("authority", "call_local", "reliable")
