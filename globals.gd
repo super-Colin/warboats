@@ -13,6 +13,7 @@ signal s_clearBoardHighlights # ships use this when a drag fails
 
 var friendlyGrid:Node
 var enemyGrid:Node
+var popUpMessage:Node
 #var boardRef:Node
 
 enum BattlePhases {MENU=0, DEPLOY=1, BATTLE=2, BATTLE_OVER=3}

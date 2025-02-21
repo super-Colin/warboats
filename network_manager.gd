@@ -9,16 +9,22 @@ signal s_connectedAsClient
 # General Update Signals
 signal s_networkStatusChanged
 
+signal s_popupWorthyMessage(msg:String)
 
 var otherPlayerId # for convience in a 2 player only game
-var role:String = "None" # for printing / debugging 
+var role:String = "Not Connected" # for printing / debugging 
+var connected:bool = false
 
 # Host only vars
 var maxClients:int = 2
 var truth={} # this is what the host will update and supply info to clients from
 var players={} # a list of player network id's that will contain info like ready, score, etc. 
 
+var popUpMessageFunction:Callable
 
+
+func setPopUpMessageFunction(newFunc:Callable):
+	popUpMessageFunction = newFunc
 
 #func addCustomPlayerVars(varsWithDefaultsDict):
 
@@ -39,13 +45,15 @@ func removePlayer(pId):
 func areAllPlayers(property:String, desiredValue=true, defaultValue=null):
 	var allPlayersAre = true
 	for p in players:
-		if p.has(property):
-			if p[property] != desiredValue:
+		if players[p].has(property):
+			if players[p][property] != desiredValue:
+				print("network - player [", p, "]:  ", property, " != ", players[p][property])
 				allPlayersAre = false
 		else:
 			allPlayersAre = false
 			if defaultValue != null: # if a default was supplied
-				p[property] = defaultValue
+				players[p][property] = defaultValue
+	print("network [", id(),"] - all players are:  ", property, " == ", allPlayersAre)
 	return allPlayersAre
 
 # setAllPlayers("score", 0)
@@ -98,7 +106,10 @@ func isAuthority():
 func setRole():
 	if isAuthority():
 		role = "Host"
-	role = "Client"
+	elif connected:
+		role = "Client"
+	else:
+		role = "Not Connected"
 
 
 
@@ -111,17 +122,21 @@ func _peer_connected(id:int):
 	addNewPlayer(id)
 	setRole()
 	otherPlayerId = id
+	connected = true
 	s_otherPlayerConnected.emit()
 	s_networkStatusChanged.emit()
 
 func _peer_disconnected(id:int):
 	print("network [host] - Player %s disconnected" % id)
 	removePlayer(id)
+	connected = false
+	s_popupWorthyMessage.emit("peer disconnected")
 	s_networkStatusChanged.emit()
 
 # Client
 func _connected_to_server():
 	otherPlayerId = 1 # since we're only dealing with 2 players at a time
+	connected = true
 	print("network [client] - connected to server")
 	setRole()
 	s_connectedAsClient.emit()
@@ -129,9 +144,15 @@ func _connected_to_server():
 	s_networkStatusChanged.emit()
 
 func _connection_failed():
+	connected = false
+	setRole()
 	s_networkStatusChanged.emit()
+	s_popupWorthyMessage.emit("Failed to connect")
 	print("network [client] - connection failed")
 
 func _server_disconnected():
+	connected = false
+	setRole()
 	print("network [client] - server disconnected")
+	s_popupWorthyMessage.emit("Host disconnected")
 	s_networkStatusChanged.emit()

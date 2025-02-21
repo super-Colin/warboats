@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://be72kyjs10j0x"]
+[gd_scene load_steps=6 format=3 uid="uid://be72kyjs10j0x"]
 
 [ext_resource type="Script" path="res://game.gd" id="1_hl5wc"]
 [ext_resource type="PackedScene" uid="uid://ugyxohxdxp8f" path="res://board.tscn" id="3_wcsvu"]
 [ext_resource type="PackedScene" uid="uid://64o0w5isorff" path="res://UI/debug_panel.tscn" id="4_ur8tl"]
+[ext_resource type="PackedScene" uid="uid://dqpgfqn4vounp" path="res://pop_up.tscn" id="5_cd6qj"]
 [ext_resource type="PackedScene" uid="uid://tw30s3tgimup" path="res://UI/multiplayer_menu.tscn" id="5_p7d0p"]
 
 [node name="Game" type="Control"]
@@ -29,3 +30,7 @@ anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 1.0
 anchor_bottom = 1.0
+
+[node name="PopUpMessage" parent="." instance=ExtResource("5_cd6qj")]
+visible = false
+layout_mode = 1

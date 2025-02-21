@@ -8,7 +8,7 @@ var minTargetPoints = 10
 # Passed through the network each turn
 var shotsToPlayOut = {}
 var shotResultsForClient = [] # {"hit":false, "coords":Vector2.ZERO}, ...
-var shipPositions = {} # for passing the position of enemy ships 
+#var shipPositions = {} # for passing the position of enemy ships 
 # Local vars
 var turnNumber = 1
 var unconfirmedShots = 0
@@ -114,9 +114,71 @@ func sendScores():
 @rpc("authority", "call_local", "reliable")
 func updateScoreLabels(scores):
 	#print("board - ", str(Network.id()), ", updating score labels:", scores)
-	
 	%Grids/Friendly/Label.text = "Score: " + str(scores[Network.id()]) + " / " + str(minTargetPoints)
 	%Grids/Enemy/Label.text = "Score: " + str(scores[Network.otherPlayerId]) + " / " + str(minTargetPoints)
+
+
+
+func deployConfirmed():
+	%Grids/Friendly/Grid.lockShipsIntoPlace()
+	updateReadyStateLabels.rpc(Network.id(), %Grids/Friendly/Grid.getShipDicts())
+	var ships = %Grids/Friendly/Grid.getShipDicts()
+	# Don't send host's info to client
+	if not Network.isAuthority(): 
+		sendShipDicts.rpc(Network.id(), ships)
+	else:
+		registerPlayerShipDicts(Network.id(), ships)
+
+# Send ships and locations to host
+@rpc("any_peer", "call_remote", "reliable")
+func sendShipDicts(pId, shipsContainedDicts):
+	if Network.isAuthority():
+		registerPlayerShipDicts(pId, shipsContainedDicts)
+
+
+
+func registerPlayerShipDicts(pId, shipsDict):
+	if not Network.isAuthority(): 
+		return
+	Network.players[pId].shipsContained = shipsDict
+	Network.players[pId].ready = true
+	if Network.connected and Network.areAllPlayers("ready"):
+		addShipsToEnemyBoard(Network.players[Network.otherPlayerId].shipsContained)
+		_beginBattlePhase.rpc()
+
+
+@rpc("authority", "call_local", "reliable")
+func _beginBattlePhase():
+	#print("board - start battle")
+	$DeployMenu.visible = false
+	$BattleMenu.visible = true
+	#%Grids/Friendly/Grid.lockShipsIntoPlace()
+	Globals.currentBattlePhase = Globals.BattlePhases.BATTLE
+
+
+
+@rpc("any_peer", "call_local", "reliable")
+func updateReadyStateLabels(pId, gridShipsContainedDicts):
+	#print("board - ", Network.role," updating ready label state:  : ", gridShipsContainedDicts)
+	if pId == Network.id():
+		%Grids/Friendly/Label.text = "Deployed"
+	else:
+		%Grids/Enemy/Label.text = "Deployed"
+	#if not playersReady.has(pId):
+		#playersReady.append(pId)
+		#shipPositions[pId] = gridShipsContainedDicts
+	#if Network.isAuthority():
+		#Network.players["shipPositions"] = gridShipsContainedDicts
+		#if Network.areAllPlayers("ready"):
+			#addShipsToEnemyBoard(shipPositions[Network.otherPlayerId])
+			#_beginBattlePhase.rpc()
+
+
+
+
+
+
+
 
 
 
@@ -155,7 +217,6 @@ func registerConfirmedShots(pId, shots):
 	#print("board -  shots to play out: ", shotsToPlayOut)
 	if Network.isAuthority() and shotsToPlayOut.size() == 2:
 			#print("board - [host] both players have confirmed shots: ", shotsToPlayOut)
-			#playOutConfirmedShots.rpc()
 			handleConfirmedShots_host()
 
 
@@ -185,28 +246,6 @@ func handleConfirmedShots_client(shotResults):
 
 
 
-@rpc("any_peer", "call_local", "reliable")
-func updateReadyStateLabels(pId, gridShipsContainedDicts):
-	#print("board - ", Network.role," updating ready label state:  : ", gridShipsContainedDicts)
-	if pId == Network.id():
-		%Grids/Friendly/Label.text = "Deployed"
-	else:
-		%Grids/Enemy/Label.text = "Deployed"
-	if not playersReady.has(pId):
-		playersReady.append(pId)
-		shipPositions[pId] = gridShipsContainedDicts
-	if Network.isAuthority() and playersReady.size() == 2:
-		#print("board - both players ready")
-		#shipPositions[Network.otherPlayerId]
-		addShipsToEnemyBoard(shipPositions[Network.otherPlayerId])
-		_beginBattlePhase.rpc()
-
-
-func deployConfirmed():
-	updateReadyStateLabels.rpc(Network.id(), %Grids/Friendly/Grid.getShipDicts())
-	#if not Network.isAuthority():
-	#else:
-
 
 
 
@@ -216,14 +255,6 @@ func addShipsToEnemyBoard(shipDicts:Array):
 		%Grids/Enemy/Grid.addShipFromDict(sd, true)
 
 
-@rpc("authority", "call_local", "reliable")
-func _beginBattlePhase():
-	#print("board - start battle")
-	playersReady = []
-	$DeployMenu.visible = false
-	$BattleMenu.visible = true
-	%Grids/Friendly/Grid.lockShipsIntoPlace()
-	Globals.currentBattlePhase = Globals.BattlePhases.BATTLE
 
 
 func _boardUpdated():

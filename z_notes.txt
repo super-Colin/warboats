@@ -1,0 +1,7 @@
+
+
+
+Show enemy ships when they are destroyed
+
+
+pop up message on peer disconnect, to go to main menu
