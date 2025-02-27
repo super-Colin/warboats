@@ -40,13 +40,54 @@ func registerConfirmedShots(pId, shots):
 	#print("board -  shots to play out: ", shotsToPlayOut)
 	if shotsEachTurn[turnNumber-1].size() == 2:
 		print("Server - both players have confirmed shots: ", shotsEachTurn[turnNumber-1])
-		Client.handleConfirmedShots.rpc(shotsEachTurn[turnNumber-1])
+		# confirm friendly shots against enemy
+		var results = Globals.boardRef.getResultsFromShots(shotsEachTurn[turnNumber-1][Network.id()], false)
+		print("Server - results on enemy board: ", results)
+		Client.handleShotResults.rpc_id(Network.otherPlayerId, results, true)
+		# shots against the host results
+		results = Globals.boardRef.getResultsFromShots(shotsEachTurn[turnNumber-1][Network.otherPlayerId], true)
+		print("Server - results on friendly board: ", results)
+		Client.handleShotResults.rpc_id(Network.otherPlayerId, results, false)
 		turnNumber += 1
 
-#
-#@rpc("any_peer", "call_local", "reliable")
-#func registerShotResults(pId, shots):
-	#
+var killedShips = []
+@rpc("authority", "call_local", "reliable")
+func addKill(ship, friendlyKilled):
+	if not Network.isAuthority() or killedShips.has(ship): 
+		return
+	if friendlyKilled:
+		players[Network.otherPlayerId].score += ship.targetPoints
+	else:
+		players[Network.id()].score += ship.targetPoints
+	killedShips.append(ship)
+	Client.updateScoreLabels.rpc(getScores())
+	if not checkForWinConditions():
+		checkForStalemateConditions()
+
+
+func checkForWinConditions():
+	var playerScores = getScores()
+	if playerScores[Network.id()] > Globals.boardRef.minTargetPoints:
+		Client.declareWinner.rpc(Network.id(), playerScores)
+		return true
+	elif playerScores[Network.otherPlayerId] > Globals.boardRef.minTargetPoints:
+		Client.declareWinner.rpc(Network.otherPlayerId, playerScores)
+		return true
+	return false
+
+func checkForStalemateConditions():
+	if Globals.boardRef.isStalemate():
+		Client.declareStalemate.rpc()
+
+
+
+
+
+func getScores():
+	return {
+		Network.id():players[Network.id()].score,
+		Network.otherPlayerId:players[Network.otherPlayerId].score,
+	}
 
 @rpc("any_peer", "call_local", "reliable")
 func registerPlayerShipDicts(pId, shipsDict):
@@ -75,47 +116,34 @@ func resetPlayerVars():
 
 
 
-#func checkForWinConditions():
-	#if playerScores[Network.id()] > minTargetPoints:
-		#declareWinner.rpc(Network.id(), playerScores)
-		#return true
-	#elif playerScores[Network.otherPlayerId] > minTargetPoints:
-		#declareWinner.rpc(Network.otherPlayerId, playerScores)
-		#return true
-	#return false
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#@rpc("authority", "call_local", "reliable")
+#func declareStalemate():
+	#print("board [", Network.role, "] - Stalemate")
+	#%Grids/Friendly/Label.text = "Stalemate"
+	#%Grids/Enemy/Label.text = "Stalemate"
+	#Globals.currentBattlePhase = Globals.BattlePhases.BATTLE_OVER
 #
-#func checkForStalemateConditions():
-	#if %Grids/Friendly/Grid.calcTotalShots() == 0 and %Grids/Enemy/Grid.calcTotalShots() == 0:
-		#declareStalemate.rpc()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-@rpc("authority", "call_local", "reliable")
-func declareStalemate():
-	print("board [", Network.role, "] - Stalemate")
-	%Grids/Friendly/Label.text = "Stalemate"
-	%Grids/Enemy/Label.text = "Stalemate"
-	Globals.currentBattlePhase = Globals.BattlePhases.BATTLE_OVER
-
-@rpc("authority", "call_local", "reliable")
-func declareWinner(pId, scores):
-	print("board [", Network.role, "] - ", pId, " wins")
-	%Grids/Friendly/Label.text = str(pId) + " Wins"
-	%Grids/Enemy/Label.text = str(pId) + " Wins"
-	Globals.currentBattlePhase = Globals.BattlePhases.BATTLE_OVER
+#@rpc("authority", "call_local", "reliable")
+#func declareWinner(pId, scores):
+	#print("board [", Network.role, "] - ", pId, " wins")
+	#%Grids/Friendly/Label.text = str(pId) + " Wins"
+	#%Grids/Enemy/Label.text = str(pId) + " Wins"
+	#Globals.currentBattlePhase = Globals.BattlePhases.BATTLE_OVER
 
 
 

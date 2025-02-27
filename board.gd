@@ -14,7 +14,7 @@ var turnNumber = 1
 var unconfirmedShots = 0
 var confirmedShotCoords = []
 var playerScores = {}
-var killedShips = []
+#var killedShips = []
 
 
 
@@ -111,6 +111,8 @@ func addShipsToBoard(shipDicts:Array, friendlyBoard=false):
 
 
 func addResultMarkersToBoard(markers:Array, friendlyBoard=false):
+	if not markers:
+		return
 	if friendlyBoard:
 		for m in markers:
 			%Grids/Friendly/Grid.addResultMarker(m)
@@ -118,10 +120,14 @@ func addResultMarkersToBoard(markers:Array, friendlyBoard=false):
 		for m in markers:
 			%Grids/Enemy/Grid.addResultMarker(m)
 
-func getResultsFromShots(confirmedShots):
+func getResultsFromShots(confirmedShots, friendlyBoard=false):
 	var results = []
-	for s in confirmedShots:
-			results.append(%Grids/Friendly/Grid.confirmShot_dict(s))
+	if friendlyBoard:
+		for s in confirmedShots:
+				results.append(%Grids/Friendly/Grid.confirmShot_dict(s))
+	else:
+		for s in confirmedShots:
+				results.append(%Grids/Enemy/Grid.confirmShot_dict(s))
 	return results
 
 
@@ -155,16 +161,17 @@ func updateScoreLabels(scores):
 	%Grids/Enemy/Label.text = "Score: " + str(scores[Network.otherPlayerId]) + " / " + str(minTargetPoints)
 
 
-@rpc("authority", "call_local", "reliable")
+#@rpc("authority", "call_local", "reliable")
 func addKill(ship, friendlyKilled):
-	if not Network.isAuthority() or killedShips.has(ship): 
+	if not Network.isAuthority(): 
 		return
-	if friendlyKilled:
-		Network.players[Network.otherPlayerId] += ship.targetPoints
-	else:
-		playerScores[Network.id()] += ship.targetPoints
-	killedShips.append(ship)
-	updateScoreLabels.rpc(playerScores)
+	Server.addKill(ship, friendlyKilled)
+	#if friendlyKilled:
+		#Network.players[Network.otherPlayerId] += ship.targetPoints
+	#else:
+		#playerScores[Network.id()] += ship.targetPoints
+	#killedShips.append(ship)
+	#updateScoreLabels.rpc(playerScores)
 	#if Network.isAuthority():
 		#if not checkForWinConditions():
 			#checkForStalemateConditions()
@@ -265,14 +272,14 @@ func _confirmShotMarkers():
 	#print("board - confirming shots: ", confirmedShotCoords)
 
 
-@rpc("authority", "call_local", "reliable")
+
 func declareStalemate():
 	print("board [", Network.role, "] - Stalemate")
 	%Grids/Friendly/Label.text = "Stalemate"
 	%Grids/Enemy/Label.text = "Stalemate"
 	Globals.currentBattlePhase = Globals.BattlePhases.BATTLE_OVER
 
-@rpc("authority", "call_local", "reliable")
+
 func declareWinner(pId, scores):
 	print("board [", Network.role, "] - ", pId, " wins")
 	%Grids/Friendly/Label.text = str(pId) + " Wins"
@@ -280,8 +287,18 @@ func declareWinner(pId, scores):
 	Globals.currentBattlePhase = Globals.BattlePhases.BATTLE_OVER
 
 
-func sendScores():
-	if not Network.isAuthority():
-		return
-	var scores = Network.getAllPlayers("score")
-	updateScoreLabels.rpc(scores)
+
+
+func isStalemate():
+	return %Grids/Friendly/Grid.calcTotalShots() == 0 and %Grids/Enemy/Grid.calcTotalShots() == 0
+
+
+
+
+
+
+#func sendScores():
+	#if not Network.isAuthority():
+		#return
+	#var scores = Network.getAllPlayers("score")
+	#updateScoreLabels.rpc(scores)

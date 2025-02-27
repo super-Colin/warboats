@@ -87,7 +87,7 @@ func getShipDicts():
 
 
 func addResultMarker(marker):
-	if marker.isHit:
+	if marker.hit:
 		cellsRefs[marker.coords.x][marker.coords.y].forceConfirmedHit()
 	else:
 		cellsRefs[marker.coords.x][marker.coords.y].forceConfirmedMiss()

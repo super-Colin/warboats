@@ -85,23 +85,20 @@ func _drop_data(at_position: Vector2, data: Variant) -> void:
 	$'.'.get_parent().setShipIntoGrid(data, coords)
 
 
-# Decide what type of marker should be used
-func _resetShotMarkers():
-	if isMarkedForShot:
-		hidePeg()
-		isMarkedForShot = false
 
 func _confirmShotMarker():
 	if isMarkedForShot:
 		isMarkedForShot = false
-		confirmed = true
-		if isShip:
-			makeHitMarker()
-			s_shipWasHit.emit(shipRef)
-			return {"hit":true,"coords":coords}
-		else:
-			makeMissMarker()
-			return {"hit":false,"coords":coords}
+	#else:
+		#print("cell - confirming without being marked for shot")
+	confirmed = true
+	if isShip:
+		makeHitMarker()
+		s_shipWasHit.emit(shipRef)
+		return {"hit":true,"coords":coords}
+	else:
+		makeMissMarker()
+		return {"hit":false,"coords":coords}
 
 
 
@@ -140,9 +137,13 @@ func hidePeg():
 	$Peg.visible = false
 
 func canBeNewUncomfirmedMarker():
-	if not isMarkedForShot and not confirmed:
-		return true
-	return false
+	return not isMarkedForShot and not confirmed
+
+func _resetShotMarkers():
+	if isMarkedForShot:
+		isMarkedForShot = false
+		hidePeg()
+
 func makeUncomfirmedMarker():
 	$Peg.color = Color.PURPLE
 	$Peg.visible = true
