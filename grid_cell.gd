@@ -111,10 +111,12 @@ func forceConfirmedHit():
 	makeHitMarker()
 	isMarkedForShot = false
 	confirmed = true
+	draggable = false
 func forceConfirmedMiss():
 	makeMissMarker()
 	isMarkedForShot = false
 	confirmed = true
+	draggable = false
 
 
 # Hover state

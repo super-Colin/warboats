@@ -63,6 +63,7 @@ func getUnconfirmedShotPlacements(markAsConfirmed=false):
 		if c.isMarkedForShot and not c.confirmed:
 			unconfirmedShotCoords.append(c.coords)
 			if markAsConfirmed:
+				# so it can't be reset
 				c.confirmed = true
 	return unconfirmedShotCoords
 
@@ -84,6 +85,12 @@ func getShipDicts():
 		dicts.append(s.simpleDict())
 	return dicts
 
+
+func addResultMarker(marker):
+	if marker.isHit:
+		cellsRefs[marker.coords.x][marker.coords.y].forceConfirmedHit()
+	else:
+		cellsRefs[marker.coords.x][marker.coords.y].forceConfirmedMiss()
 
 
 func addShipFromDict(shipDict, lockIntoPlace=false):
@@ -217,9 +224,7 @@ func placeShotMarker(coords, confirmShot=false):
 		return confirmShot_dict(coords)
 
 func confirmShot_bool(coords):
-	if cellsRefs[coords.x][coords.y]._confirmShotMarker().hit:
-		return true
-	return false
+	return cellsRefs[coords.x][coords.y]._confirmShotMarker().hit
 
 func confirmShot_dict(coords):
 	return cellsRefs[coords.x][coords.y]._confirmShotMarker()

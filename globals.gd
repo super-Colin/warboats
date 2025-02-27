@@ -1,5 +1,6 @@
 extends Node
 
+signal s_toMainMenu
 
 signal s_beginDeployPhase
 signal s_beginBattlePhase
@@ -11,6 +12,7 @@ signal coordHoveredOff(coord:Vector2)
 
 signal s_clearBoardHighlights # ships use this when a drag fails
 
+var boardRef:Node
 var friendlyGrid:Node
 var enemyGrid:Node
 var popUpMessage:Node

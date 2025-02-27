@@ -13,3 +13,4 @@ func newMessage(newMessage:String):
 
 func closePopUp():
 	$'.'.visible = false
+	Globals.s_toMainMenu.emit()

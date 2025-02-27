@@ -1,90 +1,81 @@
 extends Node
 
 # Server Signals
-signal s_otherPlayerConnected
-signal s_otherPlayerDisconnected
+signal s_playerConnected(playerId)
+signal s_playerDisconnected(playerId)
 # Client Signals
 signal s_connectingAsClient
 signal s_connectedAsClient
 # General Update Signals
 signal s_networkStatusChanged
 
+## Direct request signals
 signal s_popupWorthyMessage(msg:String)
 
 var otherPlayerId # for convience in a 2 player only game
 var role:String = "Not Connected" # for printing / debugging 
 var connected:bool = false
 
-# Host only vars
-var maxClients:int = 2
-var truth={} # this is what the host will update and supply info to clients from
-var players={} # a list of player network id's that will contain info like ready, score, etc. 
+### a list of player network id's that will contain info like ready, score, etc. 
+### this should only store information that is visible to all players (clients) 
+#var players={}
 
-var popUpMessageFunction:Callable
-
-
-func setPopUpMessageFunction(newFunc:Callable):
-	popUpMessageFunction = newFunc
-
-#func addCustomPlayerVars(varsWithDefaultsDict):
-
-## This will be customized each game if needed
-func newPlayerTemplate(_playerId):
-	return {
-		"ready": false,
-		"score": 0,
-	}
-
-func addNewPlayer(pId):
-	players[pId] = newPlayerTemplate(pId)
-func removePlayer(pId):
-	players.erase(pId)
-
-# Network.areAllPlayers("ready")
-## check all players for a property, and set a default if it's missing
-func areAllPlayers(property:String, desiredValue=true, defaultValue=null):
-	var allPlayersAre = true
-	for p in players:
-		if players[p].has(property):
-			if players[p][property] != desiredValue:
-				print("network - player [", p, "]:  ", property, " != ", players[p][property])
-				allPlayersAre = false
-		else:
-			allPlayersAre = false
-			if defaultValue != null: # if a default was supplied
-				players[p][property] = defaultValue
-	print("network [", id(),"] - all players are:  ", property, " == ", allPlayersAre)
-	return allPlayersAre
-
-# setAllPlayers("score", 0)
-func setAllPlayers(property:String, newValue:Variant):
-	var allPlayersAre = true
-	for p in players:
-		players[p][property] = newValue
-
-# getAllPlayers("score")
-## Returns a dict with {"pId" : val, "pId2":val} format
-func getAllPlayers(property:String):
-	var dict = {}
-	for p in players.keys():
-		dict[p] = players[p][property]
-	return dict
+#func addNewPlayer(pId):
+	#players[pId] = newPlayerTemplate(pId)
+#func removePlayer(pId):
+	#players.erase(pId)
+#
+## Network.areAllPlayers("ready")
+### check all players for a property, and set a default if it's missing
+#func areAllPlayers(property:String, desiredValue=true, defaultValue=null):
+	#var allPlayersAre = true
+	#for p in players:
+		#if players[p].has(property):
+			#if players[p][property] != desiredValue:
+				#print("network - player [", p, "]:  ", property, " != ", players[p][property])
+				#allPlayersAre = false
+		#else:
+			#allPlayersAre = false
+			#if defaultValue != null: # if a default was supplied
+				#players[p][property] = defaultValue
+	#print("network [", id(),"] - all players are:  ", property, " == ", allPlayersAre)
+	#return allPlayersAre
+#
+## setAllPlayers("score", 0)
+#func setAllPlayers(property:String, newValue:Variant):
+	#var allPlayersAre = true
+	#for p in players:
+		#players[p][property] = newValue
+#
+#func resetAllPlayers(template:Dictionary):
+	#for p in players:
+		#players[p] = template
+#
+## getAllPlayers("score")
+### Returns a dict with {"pId" : val, "pId2":val} format
+#func getAllPlayers(property:String):
+	#var dict = {}
+	#for p in players.keys():
+		#dict[p] = players[p][property]
+	#return dict
 
 
 
-func setMaxClients(newVal:int):
-	maxClients = newVal
+#func setMaxClients(newVal:int):
+	#maxClients = newVal
 
-func startHost(port:int):
+func startHost(port:int, maxClients=0):
+	if maxClients == 0:
+		maxClients = Server.defaultMaxClients
 	var peer = ENetMultiplayerPeer.new()
 	peer.create_server(port, maxClients)
-	print(peer)
+	#print(peer)
 	multiplayer.multiplayer_peer = peer
-	print("network - started ENet host server")
+	#print("network - started ENet host server")
 	# connect signals
-	multiplayer.peer_connected.connect(_peer_connected)
-	multiplayer.peer_disconnected.connect(_peer_disconnected)
-	addNewPlayer(id())
+	multiplayer.peer_connected.connect(Server._peer_connected)
+	multiplayer.peer_disconnected.connect(Server._peer_disconnected)
+	Server.addNewPlayer(id())
 	s_networkStatusChanged.emit()
 
 func startClient(ip, port:int):
@@ -116,22 +107,22 @@ func setRole():
 func id():
 	return multiplayer.get_unique_id()
 
-# Host
-func _peer_connected(id:int):
-	print("network [host] - Player %s connected" % id)
-	addNewPlayer(id)
-	setRole()
-	otherPlayerId = id
-	connected = true
-	s_otherPlayerConnected.emit()
-	s_networkStatusChanged.emit()
-
-func _peer_disconnected(id:int):
-	print("network [host] - Player %s disconnected" % id)
-	removePlayer(id)
-	connected = false
-	s_popupWorthyMessage.emit("peer disconnected")
-	s_networkStatusChanged.emit()
+## Host
+#func _peer_connected(pId:int):
+	#print("network [host] - Player %s connected" % pId)
+	#Server.addNewPlayer(pId)
+	#setRole()
+	#otherPlayerId = pId
+	#connected = true
+	##s_otherPlayerConnected.emit()
+	#Network.s_networkStatusChanged.emit()
+#
+#func _peer_disconnected(pId:int):
+	#print("network [host] - Player %s disconnected" % pId)
+	#Server.removePlayer(pId)
+	#connected = false
+	#s_popupWorthyMessage.emit("peer disconnected")
+	#s_networkStatusChanged.emit()
 
 # Client
 func _connected_to_server():
@@ -140,7 +131,7 @@ func _connected_to_server():
 	print("network [client] - connected to server")
 	setRole()
 	s_connectedAsClient.emit()
-	s_otherPlayerConnected.emit()
+	#s_otherPlayerConnected.emit()
 	s_networkStatusChanged.emit()
 
 func _connection_failed():
